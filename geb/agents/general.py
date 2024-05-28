@@ -1,6 +1,4 @@
 import numpy as np
-from numba import njit
-from typing import Tuple
 
 
 class AgentArray:
@@ -10,7 +8,6 @@ class AgentArray:
         n=None,
         max_n=None,
         extra_dims=None,
-        extra_dims_names=None,
         dtype=None,
         fill_value=None,
     ):
@@ -23,34 +20,39 @@ class AgentArray:
             assert (
                 extra_dims is None
             ), "extra_dims cannot be given if input_array is given"
-            assert n is None, "n cannot be given if input_array is given"
-            # assert dtype is not object
-            assert input_array.dtype != object, "dtype cannot be object"
-            n = input_array.shape[0]
+            if n is None and max_n is None:
+                raise ValueError("Either n or max_n must be given")
+            elif n is not None and max_n is not None:
+                raise ValueError("Only one of n or max_n can be given")
             if max_n:
                 if input_array.ndim == 1:
                     shape = max_n
                 else:
                     shape = (max_n, *input_array.shape[1:])
-                self._data = np.empty_like(input_array, shape=shape)
+                if isinstance(shape, tuple):
+                    if shape[0] >  input_array.shape[0]:
+                        self._data = np.empty_like(input_array, shape = shape)
+                    else:
+                        self._data = np.empty_like(input_array)
+                else: 
+                    if shape >  input_array.shape[0]:
+                        self._data = np.empty_like(input_array, shape = shape)
+                    else:
+                        self._data = np.empty_like(input_array)
                 n = input_array.shape[0]
                 self._n = n
                 self._data[:n] = input_array
-            else:
+            elif n:
                 self._data = input_array
                 self._n = n
         else:
             assert dtype is not None
-            assert dtype != object
             assert n is not None
             assert max_n is not None
             if extra_dims is None:
                 shape = max_n
             else:
                 shape = (max_n,) + extra_dims
-                assert extra_dims_names is not None
-                assert len(extra_dims) == len(extra_dims_names)
-                self.extra_dims_names = extra_dims_names
             if fill_value is not None:
                 self._data = np.full(shape, fill_value, dtype=dtype)
             else:
@@ -72,14 +74,6 @@ class AgentArray:
     @property
     def n(self):
         return self._n
-
-    @property
-    def extra_dims_names(self):
-        return self._extra_dims_names
-
-    @extra_dims_names.setter
-    def extra_dims_names(self, value):
-        self._extra_dims_names = value
 
     @n.setter
     def n(self, value):
@@ -138,27 +132,13 @@ class AgentArray:
         return self._n
 
     def __getattr__(self, name):
-        if name in (
-            "_data",
-            "data",
-            "_n",
-            "n",
-            "_extra_dims_names",
-            "extra_dims_names",
-        ):
+        if name in ("_data", "data", "_n", "n"):
             return super().__getattr__(name)
         else:
             return getattr(self.data, name)
 
     def __setattr__(self, name, value):
-        if name in (
-            "_data",
-            "data",
-            "_n",
-            "n",
-            "_extra_dims_names",
-            "extra_dims_names",
-        ):
+        if name in ("_data", "data", "_n", "n"):
             super().__setattr__(name, value)
         else:
             setattr(self.data, name, value)
@@ -280,93 +260,3 @@ class AgentArray:
 
     def __or__(self, other):
         return self._perform_operation(other, "__or__")
-
-
-@njit(cache=True)
-def downscale_volume(
-    data_gt: Tuple[float, float, float, float, float, float],
-    model_gt: Tuple[float, float, float, float, float, float],
-    data: np.ndarray,
-    mask: np.ndarray,
-    grid_to_HRU_uncompressed: np.ndarray,
-    downscale_mask: np.ndarray,
-    HRU_land_size: np.ndarray,
-) -> np.ndarray:
-
-    xoffset = (model_gt[0] - data_gt[0]) / model_gt[1]
-    assert 0.0001 > xoffset - round(xoffset) > -0.0001
-    xoffset = round(xoffset)
-    assert xoffset >= 0
-
-    yoffset = (model_gt[3] - data_gt[3]) / model_gt[5]
-    assert 0.0001 > yoffset - round(yoffset) > -0.0001
-    yoffset = round(yoffset)
-    assert yoffset >= 0
-
-    xratio = data_gt[1] / model_gt[1]
-    assert 0.0001 > xratio - round(xratio) > -0.0001
-    assert xratio > 0
-    xratio = round(xratio)
-
-    yratio = data_gt[5] / model_gt[5]
-    assert 0.0001 > yratio - round(yratio) > -0.0001
-    assert yratio > 0
-    yratio = round(yratio)
-
-    downscale_invmask = ~downscale_mask
-    assert xratio > 0
-    assert yratio > 0
-    assert xoffset > 0
-    assert yoffset > 0
-    ysize, xsize = data.shape
-    yvarsize, xvarsize = mask.shape
-    downscaled_array = np.zeros(HRU_land_size.size, dtype=np.float32)
-    i = 0
-    for y in range(ysize):
-        y_left = y * yratio - yoffset
-        y_right = min(y_left + yratio, yvarsize)
-        y_left = max(y_left, 0)
-        for x in range(xsize):
-            x_left = x * xratio - xoffset
-            x_right = min(x_left + xratio, xvarsize)
-            x_left = max(x_left, 0)
-
-            land_area_cell = 0
-            for yvar in range(y_left, y_right):
-                for xvar in range(x_left, x_right):
-                    if mask[yvar, xvar] == False:
-                        k = yvar * xvarsize + xvar
-                        HRU_right = grid_to_HRU_uncompressed[k]
-                        # assert HRU_right != -1
-                        if k > 0:
-                            HRU_left = grid_to_HRU_uncompressed[k - 1]
-                            # assert HRU_left != -1
-                        else:
-                            HRU_left = 0
-                        land_area_cell += (
-                            downscale_invmask[HRU_left:HRU_right]
-                            * HRU_land_size[HRU_left:HRU_right]
-                        ).sum()
-                        i += 1
-
-            if land_area_cell:
-                for yvar in range(y_left, y_right):
-                    for xvar in range(x_left, x_right):
-                        if mask[yvar, xvar] == False:
-                            k = yvar * xvarsize + xvar
-                            HRU_right = grid_to_HRU_uncompressed[k]
-                            # assert HRU_right != -1
-                            if k > 0:
-                                HRU_left = grid_to_HRU_uncompressed[k - 1]
-                                # assert HRU_left != -1
-                            else:
-                                HRU_left = 0
-                            downscaled_array[HRU_left:HRU_right] = (
-                                downscale_invmask[HRU_left:HRU_right]
-                                * HRU_land_size[HRU_left:HRU_right]
-                                / land_area_cell
-                                * data[y, x]
-                            )
-
-    assert i == mask.size - mask.sum()
-    return downscaled_array

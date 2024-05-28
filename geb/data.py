@@ -31,40 +31,31 @@ def load_regional_crop_data_from_dict(
     with open(model.model_structure["dict"][name], "r") as f:
         timedata = json.load(f)
 
-    if timedata["type"] == "constant":
-        return None, timedata["data"]
-    elif timedata["type"] == "time_series":
-        dates = parse_dates(timedata["time"])
-        date_index = DateIndex(dates)
+    dates = parse_dates(timedata["time"])
+    date_index = DateIndex(dates)
 
-        data = timedata["data"]
+    data = timedata["data"]
 
-        d = np.full(
-            (len(date_index), len(model.regions), len(data["0"])),
-            np.nan,
-            dtype=np.float32,
-        )  # all lengths should be the same, so just taking data from region 0.
-        for region_id, region_data in data.items():
-            for ID, region_crop_data in region_data.items():
-                d[:, int(region_id), int(ID)] = region_crop_data
+    d = np.full(
+        (len(date_index), len(model.regions), len(data["0"])), np.nan, dtype=np.float32
+    )  # all lengths should be the same, so just taking data from region 0.
+    for region_id, region_data in data.items():
+        for ID, region_crop_data in region_data.items():
+            d[:, int(region_id), int(ID)] = region_crop_data
 
-        assert not np.isnan(d).any()
-        return date_index, d
-    else:
-        raise ValueError(f"Unknown type: {timedata['type']}")
+    assert not np.isnan(d).any()
+    return date_index, d
 
 
-def load_crop_data(model_structure) -> dict[np.ndarray]:
+def load_crop_variables(model_structure) -> dict[np.ndarray]:
     """Read csv-file of values for crop water depletion.
 
     Returns:
         yield_factors: dictonary with np.ndarray of values per crop for each variable.
     """
-    with open(model_structure["dict"]["crops/crop_data"], "r") as f:
-        crop_data = json.load(f)
-    data = pd.DataFrame.from_dict(crop_data["data"], orient="index")
-    data.index = data.index.astype(int)
-    return crop_data["type"], data
+    with open(model_structure["dict"]["crops/crop_variables"], "r") as f:
+        crop_variables = json.load(f)
+    return pd.DataFrame.from_dict(crop_variables, orient="index")
 
 
 def parse_dates(date_strings, date_formats=["%Y-%m-%dT%H:%M:%S", "%Y-%m-%d", "%Y"]):
@@ -77,6 +68,14 @@ def parse_dates(date_strings, date_formats=["%Y-%m-%dT%H:%M:%S", "%Y-%m-%d", "%Y
         raise ValueError(
             "No valid date format found for date strings: {}".format(date_strings[0])
         )
+
+
+def load_crop_ids(model_structure):
+    with open(model_structure["dict"]["crops/crop_ids"], "r") as f:
+        crop_ids = json.load(f)
+    # convert keys to int
+    crop_ids = {int(key): value for key, value in crop_ids.items()}
+    return crop_ids
 
 
 def load_economic_data(fp: str) -> tuple[DateIndex, dict[int, np.ndarray]]:

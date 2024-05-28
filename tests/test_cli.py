@@ -11,16 +11,7 @@ def test_multi_level_merge():
 
 
 def test_cli():
-    for cmd in (
-        "spinup",
-        "run",
-        "build",
-        "alter",
-        "update",
-        "calibrate",
-        "sensitivity",
-        "multirun",
-    ):
+    for cmd in ("run", "build", "alter", "update", "calibrate"):
         result = subprocess.run(["geb", cmd, "--help"], capture_output=True, text=True)
 
         # Check the exit code

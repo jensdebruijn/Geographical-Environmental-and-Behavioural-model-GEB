@@ -10,7 +10,7 @@ try:
 except (ModuleNotFoundError, ImportError):
     pass
 
-from geb.agents.general import AgentArray
+from geb.agents.farmers import FarmerAgentArray
 
 
 class Artists(honeybeesArtists):
@@ -41,6 +41,13 @@ class Artists(honeybeesArtists):
         Returns:
             portrayal: Portrayal of farmer.
         """
+        n_crops = (model.agents.farmers.crops[idx] != -1).sum()
+        if n_crops == 1:
+            color = "#ff0000"
+        elif n_crops == 2:
+            color = "#00ff00"
+        else:
+            color = "#0000ff"
         # if self.model.agents.farmers.flooded[idx] == True:
         #     color = '#ff0000'
         # else:
@@ -61,7 +68,7 @@ class Artists(honeybeesArtists):
             "shape": "circle",
             "r": r,
             "filled": True,
-            "color": "#ff0000",
+            "color": color,
         }
 
     def draw_tehsil(self, properties):
@@ -167,9 +174,9 @@ class Artists(honeybeesArtists):
             invariant_dim=1,
         )
         add_vars(
-            "agents.crop_farmers",
-            compressed_size=self.model.agents.crop_farmers.n,
-            dtypes=AgentArray,
+            "agents.farmers",
+            compressed_size=self.model.agents.farmers.n,
+            dtypes=FarmerAgentArray,
             variant_dim=1,
             invariant_dim=0,
         )
@@ -210,7 +217,9 @@ class Artists(honeybeesArtists):
                 array = attrgetter(self.background_variable[: slicer.span(0)[0]])(
                     self.model
                 )
-                array = AgentArray(array[:, int(slicer.group(1))], n=array.shape[0])
+                array = FarmerAgentArray(
+                    array[:, int(slicer.group(1))], n=array.shape[0]
+                )
             else:
                 array = attrgetter(self.background_variable)(self.model)
 

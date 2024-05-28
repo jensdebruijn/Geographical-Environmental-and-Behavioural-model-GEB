@@ -1,0 +1,446 @@
+###
+# This section contains several general model settings.
+general:
+  ###
+  # model start time (YYYY-MM-DD).
+  start_time: 1980-01-01
+  ###
+  # model end time (YYYY-MM-DD).
+  end_time: 2000-01-01
+  ###
+  # start of the spinup time (YYYY-MM-DD).
+  # spinup_time: 1999-01-01
+  spinup_time: 1979-07-20
+  # spinup_time: 2007-12-31
+  ###
+  # base folder where to report output data to
+  gauges:
+    - [73.98727, 19.00464]
+  pour_point:
+    [73.98727, 19.00464]
+  CWatM_settings: CWatM.ini
+  input_folder: input/
+  original_data: ../original_data/
+  preprocessing_folder: preprocessing/
+  report_folder: report/
+  initial_conditions_folder: initial/
+  init_water_table: report/init/water_table.npy
+  ###
+  #
+  export_inital_on_spinup: true
+  simulate_floods: false
+  simulate_forest: false
+
+###
+# This section can contain settings to change the behavior of the agents.
+agent_settings:
+  ###
+  # If this setting is set to true, the farmers in the model are activated in a set order, allowing for better reproducability of the model.
+  fix_activation_order: true
+  reservoir_operators:
+    max_reservoir_release_factor: 0.03
+    MinOutflowQ: 0.0
+    NormalOutflowQ: .1
+    NonDamagingOutflowQ: 4.0
+  farmers:
+    return_fraction: .5
+    farmers_going_out_of_business: false
+    well_implementation_intention_behaviour_gap: .8
+  expected_utility:
+    general:
+      include_adaptation: true
+    drought_risk_calculations:
+      risk_perception:
+        base: 1.6
+        min: 0.001
+        max: 2
+        coef: -1.5
+      event_perception:
+        moving_average_threshold: 30
+        absolute_threshold: 40
+    adaptation_sprinkler: # Adaptation type 0
+      loan_duration: 11 
+      interest_rate: 0.04
+      adaptation_cost: 20000 # Per hectare 
+      reduced_damage: 0.1
+      lifespan: 15
+    adaptation_well: # Adaptation type 0
+      loan_duration: 11 
+      interest_rate: 0.04
+      adaptation_cost: 146000
+      upkeep_costs: 3000 # Per hectare
+      reduced_damage: 0.1
+      lifespan: 40
+    decisions:
+      risk_aversion: 1 # Sigma 
+      decision_horizon: 10
+      time_discounting: 0.032
+      expenditure_cap: 0.01
+
+###
+# This sections contains settings for logging of the model. 
+logging:
+  ###
+  # The file which the logs are written to.
+  logfile: GEB.log  
+  ###
+  # The loglevel, choose from: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  loglevel: DEBUG
+
+calibration:
+  spinup_time: 1999-01-01
+  start_time: 2001-01-01
+  end_time: 2011-01-01
+  path: ../calibration/sandbox/
+  gpus: 0
+  scenario: base
+  monthly: false
+  DEAP:
+    use_multiprocessing: false
+    ngen: 10
+    mu: 60
+    lambda_: 12
+    select_best: 10
+  target_variables:
+    report_cwatm:
+      discharge:
+        varname: data.grid.discharge
+        function: sample,1,0
+        format: csv
+        save: save
+    report:
+      irrigation_source:
+        type: farmers
+        function: null
+        varname: irrigation_source
+        frequency:
+          every: month
+          day: 1
+        save: export
+        format: npz
+      field_size:
+        type: farmers
+        function: null
+        varname: field_size_per_farmer
+        frequency:
+          every: month
+          day: 1
+        save: export
+        format: npz
+      # tehsil:
+      #   type: farmers
+      #   function: null
+      #   varname: tehsil
+      #   frequency:
+      #     every: month
+      #     day: 1
+      #   save: export
+      #   format: npz
+
+  parameters:
+    soildepth_factor:
+        variable: parameters.soildepth_factor
+        min: 0.8
+        max: 1.8
+    preferentialFlowConstant:
+        variable: parameters.preferentialFlowConstant
+        min: 0.5
+        max: 8
+    arnoBeta_add:
+        variable: parameters.arnoBeta_add
+        min: 0.01
+        max: 1.0
+    factor_interflow:
+        variable: parameters.factor_interflow
+        min: 0.33
+        max: 3.0
+    recessionCoeff_factor:
+        variable: parameters.recessionCoeff_factor
+        min: 0.05
+        max: 10
+    manningsN:
+        variable: parameters.manningsN
+        min: 0.1
+        max: 10.0
+    lakeAFactor:
+        variable: parameters.lakeAFactor
+        min: 0.333
+        max: 5.0
+    lakeEvaFactor:
+        variable: parameters.lakeEvaFactor
+        min: 0.8
+        max: 3.0
+    max_reservoir_release_factor:
+        variable: agent_settings.reservoir_operators.max_reservoir_release_factor
+        min: 0.01
+        max: 0.05
+    return_fraction:
+        variable: agent_settings.farmers.return_fraction
+        min: 0.3
+        max: 0.8
+    well_implementation_intention_behaviour_gap:
+        variable: agent_settings.farmers.well_implementation_intention_behaviour_gap
+        min: 0.0
+        max: 1.0
+
+###
+# This section is only used for the visual interface. This section closely works together with the `artists`.
+draw:
+  ###
+  # Here, you can specify which types of agents are to be drawn. In addition, you can specify options on how those agents will be drawn. These options must correspond to method arguments in the artists.
+  draw_agents:
+    farmers:
+      draw_every_nth: 1
+  draw_geography:
+  
+  ###
+  # Specify the colors and names of the crops to use here. The indices must match the indices the crop factors file (../DataDrive/GEB/input/crop_data/crop_factors.csv).
+  crop_data:
+    0:
+      name: Bajra
+      color: '#e6194b'
+    1:
+      name: Groundnut
+      color: '#3cb44b'
+    2:
+      name: Jowar
+      color: '#ffe119'
+    3:
+      name: Paddy
+      color: '#4363d8'
+    4:
+      name: Sugarcane
+      color: '#f58231'
+    5:
+      name: Wheat
+      color: '#911eb4'
+    6:
+      name: Cotton
+      color: '#46f0f0'
+    7:
+      name: Gram
+      color: '#f032e6'
+    8:
+      name: Maize
+      color: '#bcf60c'
+    9:
+      name: Moong
+      color: '#fabebe'
+    10:
+      name: Ragi
+      color: '#008080'
+    11:
+      name: Sunflower
+      color: '#e6beff'
+    12:
+      name: Tur (Arhar)
+      color: '#9a6324'
+
+###
+# Here, you can configure which data should be saved from the model in the `report` folder. This should be formatted as follows:
+#
+# - **name**: name of the folder to which the data is saved.
+#
+#   - **type**: agent type e.g., farmer. Should be identical to attribute name in Agents class.
+#   - **function**: whether to use a function to parse the data. 'null' means the data is saved literally, 'mean' takes the mean etc. Options are given in honeybees's documentation`.
+#   - **varname**: attribute name of variable in agent class.
+#   - **format**: format to save to.
+#   - **initial_only**: if true only save the data for the first timestep.
+#   - **save**: save variable in model run, or export, or both (save/save+export/export).
+report:
+  # crop_sample:
+  #   type: farmers
+  #   function: sample
+  #   varname: crop
+  #   save: save
+  #   format: csv
+  # irrigated_per_district:
+  #   type: farmers
+  #   function: mean
+  #   varname: irrigated
+  #   save: save
+  #   format: csv
+  #   groupby: tehsil
+  # crops_per_district:
+  #   type: farmers
+  #   function: groupcount,0,1
+  #   varname: crops
+  #   save: save
+  #   format: csv
+  #   groupby: tehsil
+  irrigation_source:
+    type: farmers
+    function: null
+    varname: irrigation_source
+    frequency:
+      every: month
+      day: 1
+    save: export
+    format: npz
+  field_size:
+    type: farmers
+    function: null
+    varname: field_size_per_farmer
+    frequency:
+      every: month
+      day: 1
+    save: export
+    format: npz
+  # tehsil:
+  #   type: farmers
+  #   function: null
+  #   varname: tehsil
+  #   frequency:
+  #     every: month
+  #     day: 1
+  #   save: export
+  #   format: npz
+  # crops_kharif:
+  #   type: farmers
+  #   varname: crops[:,0]
+  #   function: null
+  #   frequency: per_timestep
+  #   save: export
+  #   format: npz
+  # crops_rabi:
+  #   type: farmers
+  #   varname: crops[:,1]
+  #   function: null
+  #   frequency: per_timestep
+  #   save: export
+  #   format: npz
+  # crops_summer:
+  #   type: farmers
+  #   varname: crops[:,2]
+  #   function: null
+  #   frequency: per_timestep
+  #   save: export
+  #   format: npz
+  # wealth_sample:
+  #   type: farmers
+  #   function: sample
+  #   varname: wealth
+  #   save: save
+  #   format: csv
+  activation order:
+    type: farmers
+    function: null
+    varname: activation_order_by_elevation
+    format: npz
+    frequency: initial
+    save: export
+  # reservoir irrigation:
+  #   type: farmers
+  #   function: null
+  #   varname: reservoir_abstraction_m3_by_farmer
+  #   frequency: per_timestep
+  #   format: npz
+  #   save: export
+  # groundwater irrigation:
+  #   type: farmers
+  #   function: null
+  #   varname: groundwater_abstraction_m3_by_farmer
+  #   frequency: per_timestep
+  #   format: npz
+  #   save: export
+  # channel irrigation:
+  #   type: farmers
+  #   function: null
+  #   varname: channel_abstraction_m3_by_farmer
+  #   frequency: per_timestep
+  #   format: npz
+  #   save: export
+  # groundwater depth:
+  #   type: farmers
+  #   function: null
+  #   varname: groundwater_depth
+  #   frequency: per_timestep
+  #   format: npz
+  #   save: export
+  # profit:
+  #   type: farmers
+  #   function: null
+  #   varname: profit_per_farmer
+  #   frequency: per_timestep
+  #   format: npz
+  #   save: export
+
+###
+# In this section you can configure what CWatM data is saved, such as the groundwater head in each timestep, as follows:
+#
+# - **name**: name of the folder to which the data is saved.
+#
+#   - **varname**: attribute name of CWatM data. Should be precededed by 'var.' for data from CWatM cells and 'HRU.' for data from hydrologial units..
+#   - **function**: whether to use a function to parse the data. For example, 'mean' takes the mean etc. Options are 'mean', 'sum', 'nanmean' and 'nansum'.
+#   - **format**: format to save to.
+report_cwatm:
+   hydraulic head:
+    varname: data.grid.head
+    function: mean
+    format: csv
+    save: save
+  # precipitation:
+  #   varname: data.grid.Precipitation
+  #   function: mean
+  #   format: csv
+  #   save: save
+  # reservoir storage:
+  #   varname: data.grid.reservoirStorageM3C
+  #   function: null
+  #   format: csv
+  #   save: save
+  # discharge_daily:
+  #   varname: data.grid.discharge
+  #   function: null
+  #   format: netcdf
+  #   save: export
+  discharge_sample:
+    varname: data.grid.discharge
+    function: sample,25,54
+    format: csv
+    save: save
+  # discharge:
+  #   varname: data.grid.discharge_substep
+  #   substeps: 24
+  #   function: null
+  #   format: netcdf
+  #   save: export
+  #   time_ranges:
+  #     - start: 1979-07-22
+  #       end: 1979-07-28
+  #     - start: 2014-10-12
+  #       end: 2014-10-27
+  #     - start: 2010-05-18
+  #       end: 2010-05-24
+  #     - start: 2009-09-25
+  #       end: 2009-10-12
+  #     - start: 2008-08-05
+  #       end: 2008-08-11
+  #     - start: 2007-10-27
+  #       end: 2007-11-01
+  #     - start: 2007-09-16
+  #       end: 2007-10-07
+  #     - start: 2007-07-01
+  #       end: 2007-07-06
+  #     - start: 2007-06-22
+  #       end: 2007-07-04
+  #     - start: 2006-08-01
+  #       end: 2006-09-10
+  #     - start: 2006-07-28
+  #       end: 2006-09-12
+  #     - start: 2005-09-14
+  #       end: 2005-09-30
+  #     - start: 2005-07-23
+  #       end: 2005-08-16
+
+parameters:
+  SnowMeltCoef: 0.004
+  arnoBeta_add: 0.6653797014119323
+  factor_interflow: 1.6896506245793668
+  lakeAFactor: 3.1051495676629
+  lakeEvaFactor: 2.6777823102359894
+  manningsN: 0.8269807271111366
+  normalStorageLimit: 0.645563228322237
+  preferentialFlowConstant: 3.14300925049279
+  recessionCoeff_factor: 2.7889874934367804
+  soildepth_factor: 1.036953064771858

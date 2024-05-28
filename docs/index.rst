@@ -36,16 +36,14 @@ The figure below shows a schematic overview of some parts of the model, showing 
   Preprocessing <preprocessing>
   Running the model <running>
   Visualisation <visualisation>
-  Calibration <calibration>
 
 .. toctree::
   :maxdepth: 1
   :caption: Agents
   
   Agents <agents/__init__>
-  Households <agents/households>
   Farmers <agents/farmers>
-  Reservoir operators <agents/reservoir_operators>
+  NGO <agents/ngo>
   Government <agents/government>
 
 .. toctree::

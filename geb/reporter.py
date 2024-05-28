@@ -35,117 +35,108 @@ class CWatMReporter(ABMReporter):
     def __init__(self, model, folder: str) -> None:
         self.model = model
 
-        self.export_folder = folder
+        self.export_folder = "report/" + folder
 
         self.variables = {}
         self.timesteps = []
 
-        if self.model.mode == "w":
-            if (
-                "report_cwatm" in self.model.config
-                and self.model.config["report_cwatm"]
-            ):
-                for name, config in self.model.config["report_cwatm"].items():
-                    if config["format"] == "netcdf":
-                        assert (
-                            "single_file" in config and config["single_file"] is True
-                        ), "Only single_file=True is supported for netcdf format."
-                        netcdf_path = Path(self.export_folder, name + ".nc")
-                        config["absolute_path"] = str(netcdf_path)
-                        if netcdf_path.exists():
-                            netcdf_path.unlink()
-                        if not "time_ranges" in config:
+        if "report_cwatm" in self.model.config and self.model.config["report_cwatm"]:
+            for name, config in self.model.config["report_cwatm"].items():
+                if config["format"] == "netcdf":
+                    netcdf_path = Path(self.export_folder, name + ".nc")
+                    config["absolute_path"] = str(netcdf_path)
+                    if netcdf_path.exists():
+                        netcdf_path.unlink()
+                    if not "time_ranges" in config:
+                        if "substeps" in config:
+                            time = pd.date_range(
+                                start=self.model.current_time,
+                                periods=(self.model.n_timesteps + 1)
+                                * config["substeps"],
+                                freq=self.model.timestep_length / config["substeps"],
+                                inclusive="left",
+                            )
+                        else:
+                            time = pd.date_range(
+                                start=self.model.current_time,
+                                periods=self.model.n_timesteps + 1,
+                                freq=self.model.timestep_length,
+                            )
+                    else:
+                        time = []
+                        for time_range in config["time_ranges"]:
+                            start = time_range["start"]
+                            end = time_range["end"]
                             if "substeps" in config:
-                                time = pd.date_range(
-                                    start=self.model.current_time,
-                                    periods=(self.model.n_timesteps + 1)
-                                    * config["substeps"],
-                                    freq=self.model.timestep_length
-                                    / config["substeps"],
-                                    inclusive="left",
+                                time.extend(
+                                    pd.date_range(
+                                        start=start,
+                                        end=end + self.model.timestep_length,
+                                        freq=self.model.timestep_length
+                                        / config["substeps"],
+                                        inclusive="left",
+                                    )
                                 )
                             else:
-                                time = pd.date_range(
-                                    start=self.model.current_time,
-                                    periods=self.model.n_timesteps + 1,
-                                    freq=self.model.timestep_length,
-                                )
-                        else:
-                            time = []
-                            for time_range in config["time_ranges"]:
-                                start = time_range["start"]
-                                end = time_range["end"]
-                                if "substeps" in config:
-                                    time.extend(
-                                        pd.date_range(
-                                            start=start,
-                                            end=end + self.model.timestep_length,
-                                            freq=self.model.timestep_length
-                                            / config["substeps"],
-                                            inclusive="left",
-                                        )
+                                time.extend(
+                                    pd.date_range(
+                                        start=start,
+                                        end=end,
+                                        freq=self.model.timestep_length,
                                     )
-                                else:
-                                    time.extend(
-                                        pd.date_range(
-                                            start=start,
-                                            end=end,
-                                            freq=self.model.timestep_length,
-                                        )
-                                    )
-                            # exlude time ranges that are not in the simulation period
-                            time = [
-                                t
-                                for t in time
-                                if t >= self.model.current_time
-                                and t
-                                <= self.model.current_time
-                                + (self.model.n_timesteps + 1)
-                                * self.model.timestep_length
-                            ]
-                            # remove duplicates and sort
-                            time = list(dict.fromkeys(time))
-                            time.sort()
-                            if not time:
-                                print(
-                                    f"WARNING: None of the time ranges for {name} are in the simulation period."
                                 )
+                        # exlude time ranges that are not in the simulation period
+                        time = [
+                            t
+                            for t in time
+                            if t >= self.model.current_time
+                            and t
+                            <= self.model.current_time
+                            + (self.model.n_timesteps + 1) * self.model.timestep_length
+                        ]
+                        # remove duplicates and sort
+                        time = list(dict.fromkeys(time))
+                        time.sort()
+                        if not time:
+                            print(
+                                f"WARNING: None of the time ranges for {name} are in the simulation period."
+                            )
 
-                        self.variables[name] = xr.DataArray(
-                            coords={
-                                "time": time,
-                                "y": self.model.data.grid.lat,
-                                "x": self.model.data.grid.lon,
-                            },
-                            dims=["time", "y", "x"],
-                            name=name,
-                        )
-                        self.variables[name] = (
-                            self.variables[name]
-                            .rio.write_crs(self.model.data.grid.crs)
-                            .rio.write_coordinate_system()
-                        )
-                        self.variables[name].to_netcdf(
-                            netcdf_path,
-                            mode="a",
-                            encoding={
-                                name: {
-                                    "chunksizes": (
-                                        1,
-                                        self.variables[name].y.size,
-                                        self.variables[name].x.size,
-                                    ),
-                                    "zlib": True,
-                                    "complevel": 5,
-                                }
-                            },
-                            engine="netcdf4",
-                        )
-                        self.variables[name].close()
-                    else:
-                        self.variables[name] = []
+                    self.variables[name] = xr.DataArray(
+                        coords={
+                            "time": time,
+                            "y": self.model.data.grid.lat,
+                            "x": self.model.data.grid.lon,
+                        },
+                        dims=["time", "y", "x"],
+                        name=name,
+                    )
+                    self.variables[name] = (
+                        self.variables[name]
+                        .rio.write_crs(self.model.data.grid.crs)
+                        .rio.write_coordinate_system()
+                    )
+                    self.variables[name].to_netcdf(
+                        netcdf_path,
+                        mode="a",
+                        encoding={
+                            name: {
+                                "chunksizes": (
+                                    1,
+                                    self.variables[name].y.size,
+                                    self.variables[name].x.size,
+                                ),
+                                "zlib": True,
+                                "complevel": 5,
+                            }
+                        },
+                        engine="netcdf4",
+                    )
+                    self.variables[name].close()
+                else:
+                    self.variables[name] = []
 
-            self.step()  # report on inital state
+        self.step()  # report on inital state
 
     def decompress(self, attr: str, array: np.ndarray) -> np.ndarray:
         """This function decompresses an array for given attribute.
@@ -227,8 +218,6 @@ class CWatMReporter(ABMReporter):
             fp = os.path.join(folder, fn)
             if isinstance(value, (np.ndarray, cp.ndarray)):
                 value = value.tolist()
-            if isinstance(value, (float, int)):
-                value = [value]
             if len(value) > 100_000:
                 self.model.logger.info(
                     f"Exporting {len(value)} items to csv. This might take a long time and take a lot of space. Consider using NumPy (compressed) binary format (npy/npz)."
@@ -317,6 +306,20 @@ class CWatMReporter(ABMReporter):
                                 if conf["varname"].startswith("data.grid"):
                                     gt = self.model.data.grid.gt
                                 elif conf["varname"].startswith("data.HRU"):
+                                    gt = self.model.data.routing.gt
+                                else:
+                                    raise ValueError
+                                x, y = coord_to_pixel(
+                                    (float(args[0]), float(args[1])), gt
+                                )
+                                decompressed_array = self.decompress(
+                                    conf["varname"], array
+                                )
+                                value = decompressed_array[y, x]
+                            elif function == "sample_coord":
+                                if conf["varname"].startswith("data.grid"):
+                                    gt = self.model.data.grid.gt
+                                elif conf["varname"].startswith("data.HRU"):
                                     gt = self.model.data.HRU.gt
                                 else:
                                     raise ValueError
@@ -328,7 +331,7 @@ class CWatMReporter(ABMReporter):
                                 )
                                 value = decompressed_array[y, x]
                             else:
-                                raise ValueError(f"Function {function} not recognized")
+                                raise ValueError(f"Function {function} not recognized"f"Function {function} not recognized")
                     self.report_value(name, value, conf)
 
     def report(self) -> None:
@@ -342,7 +345,7 @@ class CWatMReporter(ABMReporter):
                         {k: v for k, v in zip(self.timesteps, values)}
                     )
                 else:
-                    df = pd.DataFrame(values, index=self.timesteps, columns=[name])
+                    df = pd.DataFrame(values, index=self.timesteps, columns=["discharge_sample"])
                 df.index.name = "time"
                 export_format = self.model.config["report_cwatm"][name]["format"]
                 if export_format == "csv":
@@ -366,8 +369,8 @@ class Reporter:
 
     def __init__(self, model):
         self.model = model
-        self.abm_reporter = ABMReporter(model, folder=self.model.report_folder)
-        self.cwatmreporter = CWatMReporter(model, folder=self.model.report_folder)
+        self.abm_reporter = ABMReporter(model, folder=self.model.run_name)
+        self.cwatmreporter = CWatMReporter(model, folder=self.model.run_name)
 
     @property
     def variables(self):

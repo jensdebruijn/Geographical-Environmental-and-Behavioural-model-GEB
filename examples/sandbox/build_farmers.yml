@@ -1,0 +1,10 @@
+setup_farmers_from_csv:
+  path: ../DataDrive/sandbox/preprocessing/agents/farmers/farmers.csv
+  irrigation_sources:
+    no_irrigation: 0
+    canals: 1
+    well: 2
+    tubewell: 3
+    tank: 4
+    other: 5
+  n_seasons: 3

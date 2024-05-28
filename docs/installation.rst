@@ -16,19 +16,13 @@ Then install the required packages:
 .. code-block:: bash
 
     conda config --set solver libmamba
-    conda install rasterio numba tbb pandas geopandas numpy deap pyyaml xarray dask rioxarray pybind11 scipy netCDF4 flopy bmipy xmipy xlrd s3fs xesmf hydromt tqdm openpyxl xclim xesmf tbb matplotlib seaborn
+    conda install rasterio numba tbb pandas geopandas numpy deap  pyyaml xarray dask rioxarray pybind11 scipy netCDF4 flopy bmipy xmipy xlrd pyflow s3fs xesmf hydromt tqdm openpyxl xclim xesmf
 
 Then install GEB from GitHub. You need to install the full version, which includes all dependencies:
 
 .. code-block:: bash
 
     pip install geb[full]@git+https://github.com/GEB-model/GEB
-
-Due to a bug in hydromt, you need to upgrade universal-pathlib to the latest version. This will hopefully be fixed in the next release of hydromt.
-
-.. code-block:: bash
-
-    pip install --upgrade universal-pathlib
 
 Installation in development mode
 --------------------------------
@@ -49,14 +43,3 @@ Then install GEB in editable mode:
 
     git clone https://github.com/GEB-model/GEB
     pip install -e GEB
-
-Due to a bug in hydromt, you need to upgrade universal-pathlib to the latest version. This will hopefully be fixed in the next release of hydromt.
-
-.. code-block:: bash
-
-    pip install --upgrade universal-pathlib
-
-Installing SFINCS (flood model)
---------------------------------
-
-If you want to simulate floods in GEB, the flood model SFINCS is required. To install this model you need to do the following:

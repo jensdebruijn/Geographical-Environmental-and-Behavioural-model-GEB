@@ -19,14 +19,11 @@ dependencies = [
     "deap",
     "pyyaml",
     "xarray",
-    "matplotlib",
-    "seaborn",
     "dask>=2023.3.0",
     "rioxarray>=0.15",
     "pybind11",
-    "SALib>=1.4.8",
-    "hydromt-sfincs==1.0.3",
-    "honeybees@git+https://github.com/VU-IVM/honeybees",
+    "hydromt-sfincs@git+https://github.com/Deltares/hydromt_sfincs",
+    "honeybees@git+https://github.com/jensdebruijn/honeybees",
 ]
 requires-python = ">=3.10"
 readme = "README.md"
@@ -57,8 +54,8 @@ gpu = [
 ]
 
 full = [
-    "abcwatm@git+https://github.com/GEB-model/ABCWatM",
-    "hydromt_geb@git+https://github.com/GEB-model/hydromt_geb",
+    "abcwatm@git+https://github.com/jensdebruijn/ABCWatM",
+    "hydromt_geb@git+https://github.com/jensdebruijn/hydromt_geb",
 ]
 
 [project.scripts]

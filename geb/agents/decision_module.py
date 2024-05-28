@@ -265,7 +265,7 @@ class DecisionModule:
             # Apply utility function to NPVs
             EU_adapt_no_flood = (NPV_adapt_no_flood ** (1 - sigma[i])) / (1 - sigma[i])
 
-            # Calculate NPVs outcomes for each flood event
+            # # Calculate NPVs outcomes for each flood event
             NPV_adapt = np.empty((p_droughts.size, T[i]), dtype=np.float32)
 
             for j in range(p_droughts.size):

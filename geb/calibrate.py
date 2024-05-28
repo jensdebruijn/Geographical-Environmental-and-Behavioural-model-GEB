@@ -620,8 +620,8 @@ def run_model(individual, config, gauges, observed_streamflow):
                     run_directory, individual, config, gauges, observed_streamflow
                 )
             )
-        if score == "irrigation_wells":
-            scores.append(get_irrigation_wells_score(run_directory, individual, config))
+        # if score == 'irrigation_wells':
+        #     scores.append(get_irrigation_wells_score(run_directory, individual, config))
         if score == "KGE_yield_ratio":
             scores.append(get_KGE_yield_ratio(run_directory, individual, config))
     return tuple(scores)
@@ -685,6 +685,12 @@ def init_pool(manager_current_gpu_use_count, manager_lock, gpus, models_per_gpu)
 
 def calibrate(config, working_directory):
     calibration_config = config["calibration"]
+
+    config["calibration"]["calibration_targets"] = {
+        "KGE_discharge": 1,
+        "irrigation_wells": 1,
+        # 'KGE_yield_ratio': 1
+    }
 
     use_multiprocessing = calibration_config["DEAP"]["use_multiprocessing"]
 

@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 import datetime
 from pathlib import Path
+from operator import attrgetter
 import geopandas as gpd
 from typing import Union
 from time import time
 import copy
 import numpy as np
-import warnings
-import asyncio
-import threading
 
 try:
     import cupy as cp
@@ -21,57 +19,13 @@ from honeybees.model import Model as ABM_Model
 
 from geb.reporter import Reporter
 from geb.agents import Agents
+from geb.agents.general import AgentArray
 from geb.artists import Artists
 from geb.HRUs import Data
 from geb.cwatm_model import CWatM_Model
-from geb.hazards.driver import HazardDriver
 
 
-class ABM(ABM_Model):
-    def __init__(
-        self,
-        current_time,
-        timestep_length,
-        n_timesteps,
-        coordinate_system: str,
-    ) -> None:
-        """Initializes the agent-based model.
-
-        Args:
-            config_path: Filepath of the YAML-configuration file.
-            args: Run arguments.
-            coordinate_system: Coordinate system that should be used. Currently only accepts WGS84.
-        """
-
-        ABM_Model.__init__(
-            self,
-            current_time,
-            timestep_length,
-            args=None,
-            n_timesteps=n_timesteps,
-        )
-
-        study_area = {
-            "xmin": self.data.grid.bounds[0],
-            "xmax": self.data.grid.bounds[2],
-            "ymin": self.data.grid.bounds[1],
-            "ymax": self.data.grid.bounds[3],
-        }
-
-        self.area = Area(self, study_area)
-        self.agents = Agents(self)
-        self.artists = Artists(self)
-
-        assert (
-            coordinate_system == "WGS84"
-        )  # coordinate system must be WGS84. If not, all code needs to be reviewed
-
-        # This variable is required for the batch runner. To stop the model
-        # if some condition is met set running to False.
-        timeprint("Finished setup")
-
-
-class GEBModel(HazardDriver, ABM, CWatM_Model):
+class GEBModel(ABM_Model, CWatM_Model):
     """GEB parent class.
 
     Args:
@@ -95,37 +49,14 @@ class GEBModel(HazardDriver, ABM, CWatM_Model):
         spinup: bool = False,
         use_gpu: bool = False,
         gpu_device=0,
-        timing=False,
         coordinate_system: str = "WGS84",
-        mode="w",
     ):
-        self.timing = timing
-        assert mode in ("w", "r")
-        self.mode = mode
-
-        try:
-            self.loop = asyncio.get_running_loop()
-        except RuntimeError:
-            self.loop = asyncio.new_event_loop()
-
-        if not self.loop.is_running():
-            self.loop_thread = threading.Thread(target=self.loop.run_forever)
-            self.loop_thread.start()
-
         self.spinup = spinup
         self.use_gpu = use_gpu
         if self.use_gpu:
             cp.cuda.Device(gpu_device).use()
 
         self.config = self.setup_config(config)
-
-        if "simulate_hydrology" not in self.config["general"]:
-            self.config["general"]["simulate_hydrology"] = True
-            warnings.warn(
-                "Please add 'simulate_hydrology' to the general section of the config file. For most cases this should be set to 'true'.",
-                DeprecationWarning,
-            )
-
         if self.spinup:
             self.config["report"] = {}
 
@@ -167,6 +98,7 @@ class GEBModel(HazardDriver, ABM, CWatM_Model):
 
             self.load_initial_data = False
             self.save_initial_data = self.config["general"]["export_inital_on_spinup"]
+            self.initial_conditions = []
         else:
             current_time = datetime.datetime.combine(
                 self.config["general"]["start_time"], datetime.time(0)
@@ -189,22 +121,24 @@ class GEBModel(HazardDriver, ABM, CWatM_Model):
         self.regions = gpd.read_file(self.model_structure["geoms"]["areamaps/regions"])
         self.data = Data(self)
 
-        HazardDriver.__init__(self)
-
-        ABM.__init__(
-            self,
+        self.__init_ABM__(
             current_time,
             timestep_length,
             n_timesteps,
             coordinate_system,
         )
+        self.__init_hydromodel__(self.config["general"]["CWatM_settings"])
+        if self.config["general"]["simulate_floods"]:
+            from geb.sfincs import SFINCS
 
-        if self.config["general"]["simulate_hydrology"]:
-            CWatM_Model.__init__(
-                self,
-                self.current_time + self.timestep_length,
-                self.n_timesteps,
-                self.config["general"]["CWatM_settings"],
+            # exract the longest flood event in days
+            flood_events = self.config["general"]["flood_events"]
+            flood_event_lengths = [
+                event["end_time"] - event["start_time"] for event in flood_events
+            ]
+            longest_flood_event = max(flood_event_lengths).days
+            self.sfincs = SFINCS(
+                self, config=self.config, n_timesteps=longest_flood_event
             )
 
         self.reporter = Reporter(self)
@@ -223,7 +157,59 @@ class GEBModel(HazardDriver, ABM, CWatM_Model):
         )
         np.savez_compressed(
             Path(self.reporter.abm_reporter.export_folder, "activation_order.npz"),
-            data=self.agents.crop_farmers.activation_order_by_elevation,
+            data=self.agents.farmers.activation_order_by_elevation,
+        )
+
+    def __init_ABM__(
+        self,
+        current_time,
+        timestep_length,
+        n_timesteps,
+        coordinate_system: str,
+    ) -> None:
+        """Initializes the agent-based model.
+
+        Args:
+            config_path: Filepath of the YAML-configuration file.
+            args: Run arguments.
+            coordinate_system: Coordinate system that should be used. Currently only accepts WGS84.
+        """
+
+        ABM_Model.__init__(
+            self,
+            current_time,
+            timestep_length,
+            args=None,
+            n_timesteps=n_timesteps,
+        )
+
+        study_area = {
+            "xmin": self.data.grid.bounds.left,
+            "xmax": self.data.grid.bounds.right,
+            "ymin": self.data.grid.bounds.bottom,
+            "ymax": self.data.grid.bounds.top,
+        }
+
+        self.area = Area(self, study_area)
+        self.agents = Agents(self)
+        self.artists = Artists(self)
+
+        assert (
+            coordinate_system == "WGS84"
+        )  # coordinate system must be WGS84. If not, all code needs to be reviewed
+
+        # This variable is required for the batch runner. To stop the model
+        # if some condition is met set running to False.
+        timeprint("Finished setup")
+
+    def __init_hydromodel__(self, settings: str) -> None:
+        """Function to initialize CWatM.
+
+        Args:
+            settings: Filepath of CWatM settingsfile
+        """
+        CWatM_Model.__init__(
+            self, self.current_time + self.timestep_length, self.n_timesteps, settings
         )
 
     def step(self, step_size: Union[int, str] = 1) -> None:
@@ -233,24 +219,29 @@ class GEBModel(HazardDriver, ABM, CWatM_Model):
         Args:
             step_size: Number of steps the model should take. Can be integer or string `day`, `week`, `month`, `year`, `decade` or `century`.
         """
+
         if isinstance(step_size, str):
             n = self.parse_step_str(step_size)
         else:
             n = step_size
         for _ in range(n):
+            print(self.current_time, flush=True)
             t0 = time()
             self.data.step()
-            HazardDriver.step(self, 1)
             ABM_Model.step(self, 1, report=False)
-            if self.config["general"]["simulate_hydrology"]:
-                CWatM_Model.step(self, 1)
+            CWatM_Model.step(self, 1)
+
+            if self.config["general"]["simulate_floods"]:
+                self.sfincs.save_discharge()
+
+                for event in self.config["general"]["flood_events"]:
+                    assert type(self.current_time.date()) == type(event["end_time"])
+                    if self.current_time.date() == event["end_time"]:
+                        self.sfincs.run(event["basin_id"], event["start_time"])
 
             self.reporter.step()
             t1 = time()
-            print(
-                f"{self.current_time} ({round(t1 - t0, 4)}s)",
-                flush=True,
-            )
+            # print(t1-t0, 'seconds')
 
     def run(self) -> None:
         """Run the model for the entire period, and export water table in case of spinup scenario."""
@@ -258,8 +249,23 @@ class GEBModel(HazardDriver, ABM, CWatM_Model):
             self.step()
 
         if self.save_initial_data:
-            self.data.save_state()
-            self.agents.save_state()
+            self.initial_conditions_folder.mkdir(parents=True, exist_ok=True)
+            with open(
+                Path(self.initial_conditions_folder, "initial_conditions.txt"), "w"
+            ) as f:
+                for var in self.initial_conditions:
+                    f.write(f"{var}\n")
+
+                    fp = self.initial_conditions_folder / f"{var}.npz"
+                    values = attrgetter(var)(self.data)
+                    np.savez_compressed(fp, data=values)
+
+            for attribute, value in vars(self.agents.farmers).items():
+                if isinstance(value, AgentArray):
+                    fp = Path(
+                        self.initial_conditions_folder, f"farmers.{attribute}.npz"
+                    )
+                    np.savez_compressed(fp, data=value.data)
 
         print("Model run finished")
 
@@ -285,19 +291,7 @@ class GEBModel(HazardDriver, ABM, CWatM_Model):
 
     def close(self) -> None:
         """Finalizes the model."""
-        if self.config["general"]["simulate_hydrology"]:
-            CWatM_Model.finalize(self)
-
-        from geb.workflows import all_async_readers
-
-        for reader in all_async_readers:
-            reader.close()
-
-        self.loop.call_soon_threadsafe(self.loop.stop)
-        # Wait for the loop thread to finish
-        if hasattr(self, "loop_thread"):
-            self.loop_thread.join()
-        self.loop.close()
+        CWatM_Model.finalize(self)
 
     def __enter__(self):
         return self

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from . import AgentBaseClass
+from honeybees.agents import AgentBaseClass
+import os
 import numpy as np
 import pandas as pd
-from .general import AgentArray
 
 
 class ReservoirOperators(AgentBaseClass):
@@ -25,67 +25,54 @@ class ReservoirOperators(AgentBaseClass):
         df = pd.read_csv(
             self.model.model_structure["table"][
                 "routing/lakesreservoirs/basin_lakes_data"
-            ],
-            dtype={
-                "waterbody_type": int,
-                "volume_total": float,
-                "average_discharge": float,
-                "average_area": float,
-                "volume_flood": float,
-                "relative_area_in_region": float,
-            },
+            ]
         ).set_index("waterbody_id")
 
         self.reservoirs = df[df["waterbody_type"] == 2].copy()
-        self.cons_limit_ratio = 0.02
-        self.flood_limit_ratio = 1
 
-        super().__init__()
-
-    def initiate(self):
+    def initiate_agents(self, waterBodyIDs):
         assert (self.reservoirs["volume_total"] > 0).all()
-        self.active_reservoirs = self.reservoirs[self.reservoirs["waterbody_type"] == 2]
+        self.active_reservoirs = self.reservoirs.loc[waterBodyIDs]
 
         np.save(
             self.model.report_folder / "active_reservoirs_waterBodyIDs.npy",
-            self.active_reservoirs.index.to_numpy(),
+            waterBodyIDs,
         )
 
-        self.reservoir_release_factors = AgentArray(
-            np.full(
-                len(self.active_reservoirs),
-                self.model.config["agent_settings"]["reservoir_operators"][
-                    "max_reservoir_release_factor"
-                ],
-            )
+        self.reservoir_release_factors = np.full(
+            len(self.active_reservoirs),
+            self.model.config["agent_settings"]["reservoir_operators"][
+                "max_reservoir_release_factor"
+            ],
         )
 
-        self.reservoir_volume = AgentArray(
-            self.active_reservoirs["volume_total"].values
-        )
-        self.flood_volume = AgentArray(self.active_reservoirs["volume_flood"].values)
-        self.dis_avg = AgentArray(self.active_reservoirs["average_discharge"].values)
+        self.reservoir_volume = self.active_reservoirs["volume_total"].values
+        self.flood_volume = self.active_reservoirs["volume_flood"].values
+        self.dis_avg = self.active_reservoirs["average_discharge"].values
 
-        self.norm_limit_ratio = AgentArray(self.flood_volume / self.reservoir_volume)
-        self.norm_flood_limit_ratio = AgentArray(
-            self.norm_limit_ratio
-            + 0.5 * (self.flood_limit_ratio - self.norm_limit_ratio)
+        self.cons_limit_ratio = 0.02
+        self.norm_limit_ratio = self.flood_volume / self.reservoir_volume
+        self.flood_limit_ratio = 1
+        self.norm_flood_limit_ratio = self.norm_limit_ratio + 0.5 * (
+            self.flood_limit_ratio - self.norm_limit_ratio
         )
 
-        self.minQC = AgentArray(
+        self.minQC = (
             self.model.config["agent_settings"]["reservoir_operators"]["MinOutflowQ"]
             * self.dis_avg
         )
-        self.normQC = AgentArray(
+        self.normQC = (
             self.model.config["agent_settings"]["reservoir_operators"]["NormalOutflowQ"]
             * self.dis_avg
         )
-        self.nondmgQC = AgentArray(
+        self.nondmgQC = (
             self.model.config["agent_settings"]["reservoir_operators"][
                 "NonDamagingOutflowQ"
             ]
             * self.dis_avg
         )
+
+        return self
 
     def regulate_reservoir_outflow(self, reservoirStorageM3C, inflowC, waterBodyIDs):
         assert reservoirStorageM3C.size == inflowC.size == waterBodyIDs.size
@@ -142,20 +129,7 @@ class ReservoirOperators(AgentBaseClass):
 
         return reservoir_outflow
 
-    def get_available_water_reservoir_command_areas(
-        self, reservoir_storage_m3, potential_irrigation_consumption_m
-    ):
-        potential_irrigation_consumption_m3 = (
-            potential_irrigation_consumption_m * self.model.data.HRU.cellArea
-        )
-        potential_irrigation_consumption_m3[self.model.data.HRU.land_owners != -1]
-        potential_irrigation_consumption_m3_per_farmer = np.bincount(
-            self.model.data.HRU.land_owners[self.model.data.HRU.land_owners != -1],
-            weights=potential_irrigation_consumption_m3[
-                self.model.data.HRU.land_owners != -1
-            ],
-            minlength=self.model.agents.crop_farmers.n,
-        )
+    def get_available_water_reservoir_command_areas(self, reservoir_storage_m3):
         return self.reservoir_release_factors * reservoir_storage_m3
 
     def step(self) -> None:

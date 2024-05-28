@@ -35,63 +35,6 @@ def test_agent_array():
     assert a.n == 3
 
     # Test addition with scalar
-    result = a + 1
-    assert np.array_equal(result, np.array([2, 3, 4]))
-
-    # Test addition with array
-    b = np.array([1, 2, 3])
-    result = a + b
-    assert np.array_equal(result, np.array([2, 4, 6]))
-
-    # Test multiplication with scalar
-    result = a * 2
-    assert np.array_equal(result, np.array([2, 4, 6]))
-
-    # Test multiplication with array
-    result = a * b
-    assert np.array_equal(result, np.array([1, 4, 9]))
-
-    # Test subtraction with scalar
-    result = a - 1
-    assert np.array_equal(result, np.array([0, 1, 2]))
-
-    # Test subtraction with array
-    result = a - b
-    assert np.array_equal(result, np.array([0, 0, 0]))
-
-    # Test division with scalar
-    result = a / 2
-    assert np.array_equal(result, np.array([0.5, 1, 1.5]))
-
-    # Test division with array
-    result = a / b
-    assert np.array_equal(result, np.array([1, 1, 1]))
-
-    # Test power with scalar
-    result = a**2
-    assert np.array_equal(result, np.array([1, 4, 9]))
-
-    # Test power with array
-    result = a**b
-    assert np.array_equal(result, np.array([1, 4, 27]))
-
-    # Test floor division with scalar
-    result = a // 3
-    assert np.array_equal(result, np.array([0, 0, 1]))
-
-    # Test floor division with array
-    result = a // b
-    assert np.array_equal(result, np.array([1, 1, 1]))
-
-    # Test modulo with scalar
-    result = a % 2
-    assert np.array_equal(result, np.array([1, 0, 1]))
-
-    # Test modulo with array
-    result = a % b
-    assert np.array_equal(result, np.array([0, 0, 0]))
-
-    # Test addition with scalar
     a += 1
     assert np.array_equal(a, np.array([2, 3, 4]))
 

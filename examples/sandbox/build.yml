@@ -1,0 +1,282 @@
+setup_grid:
+  hydrography_fn: merit_hydro_30sec
+  basin_index_fn: merit_hydro_index
+  sub_grid_factor: 40
+
+setup_cell_area_map:
+
+setup_crops:
+  crop_ids:
+    0: Bajra
+    1: Groundnut
+    2: Jowar
+    3: Paddy
+    4: Sugarcane
+    5: Wheat
+    6: Cotton
+    7: Gram
+    8: Maize
+    9: Moong
+    10: Ragi
+    11: Sunflower
+    12: Tur
+  crop_variables:
+    0:
+      Kc1: 0.3
+      Kc3: 1.0
+      Kc5: 0.3
+      KyT: 0.9
+      d1: 10.0
+      d2a: 25.0
+      d2b: 0.0
+      d3a: 13.0
+      d3b: 27.0
+      d4: 25.0
+      season_#1_duration: 150.0
+      season_#2_duration: 115.0
+      reference_yield_kg_m2: 0.8
+      season_#3_duration: 90.0
+    1:
+      Kc1: 0.4
+      Kc3: 1.15
+      Kc5: 0.6
+      KyT: 0.7
+      d1: 20.0
+      d2a: 30.0
+      d2b: 0.0
+      d3a: 15.0
+      d3b: 15.0
+      d4: 20.0
+      season_#1_duration: 150.0
+      season_#2_duration: 115.0
+      reference_yield_kg_m2: 0.85
+      season_#3_duration: 90.0
+    2:
+      Kc1: 0.3
+      Kc3: 1.05
+      Kc5: 0.55
+      KyT: 0.9
+      d1: 10.0
+      d2a: 25.0
+      d2b: 0.0
+      d3a: 40.0
+      d3b: 0.0
+      d4: 25.0
+      season_#1_duration: 150.0
+      season_#2_duration: 115.0
+      reference_yield_kg_m2: 1.5
+      season_#3_duration: 90.0
+    3:
+      Kc1: 1.05
+      Kc3: 1.2
+      Kc5: 0.9
+      KyT: 2.0
+      d1: 15.0
+      d2a: 10.0
+      d2b: 10.0
+      d3a: 15.0
+      d3b: 30.0
+      d4: 20.0
+      season_#1_duration: 150.0
+      season_#2_duration: 115.0
+      reference_yield_kg_m2: 1.2
+      season_#3_duration: 90.0
+    4:
+      Kc1: 0.4
+      Kc3: 1.25
+      Kc5: 0.75
+      KyT: 1.2
+      d1: 9.0
+      d2a: 15.0
+      d2b: 0.0
+      d3a: 47.0
+      d3b: 0.0
+      d4: 29.0
+      season_#1_duration: 170
+      season_#2_duration: 160
+      reference_yield_kg_m2: 5.0
+      season_#3_duration: 150
+    5:
+      Kc1: 0.3
+      Kc3: 1.1
+      Kc5: 0.3
+      KyT: 1.15
+      d1: 15.0
+      d2a: 25.0
+      d2b: 0.0
+      d3a: 13.0
+      d3b: 27.0
+      d4: 20.0
+      season_#1_duration: 150.0
+      season_#2_duration: 115.0
+      reference_yield_kg_m2: 1.0
+      season_#3_duration: 90.0
+    6:
+      Kc1: 0.35
+      Kc3: 1.15
+      Kc5: 0.7
+      KyT: 0.85
+      d1: 15.0
+      d2a: 25.0
+      d2b: 0.0
+      d3a: 33.0
+      d3b: 17.0
+      d4: 10.0
+      season_#1_duration: 150.0
+      season_#2_duration: 115.0
+      reference_yield_kg_m2: 0.55
+      season_#3_duration: 90.0
+    7:
+      Kc1: 0.4
+      Kc3: 1.05
+      Kc5: 0.35
+      KyT: 1.15
+      d1: 20.0
+      d2a: 30.0
+      d2b: 0.0
+      d3a: 12.0
+      d3b: 18.0
+      d4: 20.0
+      season_#1_duration: 100.0
+      season_#2_duration: 100.0
+      reference_yield_kg_m2: 0.6
+      season_#3_duration: 90.0
+    8:
+      Kc1: 0.3
+      Kc3: 1.2
+      Kc5: 0.35
+      KyT: 1.25
+      d1: 15.0
+      d2a: 30.0
+      d2b: 0.0
+      d3a: 13.0
+      d3b: 27.0
+      d4: 15.0
+      season_#1_duration: 150.0
+      season_#2_duration: 115.0
+      reference_yield_kg_m2: 2.4
+      season_#3_duration: 90.0
+    9:
+      Kc1: 0.4
+      Kc3: 1.05
+      Kc5: 0.35
+      KyT: 1.15
+      d1: 20.0
+      d2a: 30.0
+      d2b: 0.0
+      d3a: 12.0
+      d3b: 18.0
+      d4: 20.0
+      season_#1_duration: 100.0
+      season_#2_duration: 100.0
+      reference_yield_kg_m2: 0.6
+      season_#3_duration: 90.0
+    10:
+      Kc1: 0.3
+      Kc3: 1.0
+      Kc5: 0.3
+      KyT: 0.9
+      d1: 10.0
+      d2a: 25.0
+      d2b: 0.0
+      d3a: 13.0
+      d3b: 27.0
+      d4: 25.0
+      season_#1_duration: 150.0
+      season_#2_duration: 115.0
+      reference_yield_kg_m2: 0.8
+      season_#3_duration: 90.0
+    11:
+      Kc1: 0.35
+      Kc3: 1.05
+      Kc5: 0.35
+      KyT: 0.95
+      d1: 15.0
+      d2a: 16.0
+      d2b: 14.0
+      d3a: 22.0
+      d3b: 18.0
+      d4: 15.0
+      season_#1_duration: 150.0
+      season_#2_duration: 115.0
+      reference_yield_kg_m2: 0.4
+      season_#3_duration: 90.0
+    12:
+      Kc1: 0.4
+      Kc3: 1.05
+      Kc5: 0.35
+      KyT: 1.15
+      d1: 20.0
+      d2a: 30.0
+      d2b: 0.0
+      d3a: 12.0
+      d3b: 18.0
+      d4: 20.0
+      season_#1_duration: 150.0
+      season_#2_duration: 115.0
+      reference_yield_kg_m2: 0.6
+      season_#3_duration: 90.0
+
+  crop_prices: ../preprocessing/crops/crop_prices.json
+  cultivation_costs: ../preprocessing/crops/cultivation_costs.json
+
+setup_mannings:
+
+setup_channel_width:
+  minimum_width: 3
+
+setup_channel_depth:
+
+setup_channel_ratio:
+
+setup_elevation_STD:
+
+setup_soil_parameters:
+
+setup_land_use_parameters:
+
+setup_waterbodies:
+
+setup_water_demand:
+
+setup_modflow:
+  epsg: 32643
+  resolution: 1000
+
+setup_forcing:
+  starttime: 1979-01-01
+  # endtime: 1979-12-31
+  endtime: 2016-12-31
+
+setup_regions_and_land_use:
+  region_database: india_cencus
+  unique_region_id: objectid
+  # region_database: gadm_level1
+  # unique_region_id: UID
+  river_threshold: 100
+
+setup_economic_data:
+
+setup_well_prices_by_reference_year:
+  well_price: 146_000
+  upkeep_price_per_m2: .3
+  reference_year: 2008
+  start_year: 1960
+  end_year: 2020
+
+setup_drip_irrigation_prices_by_reference_year:
+  drip_irrigation_price: 40000
+  upkeep_price_per_m2: 0
+  reference_year: 2021
+  start_year: 1960
+  end_year: 2020
+
+setup_farmers_simple:
+  region_id_column: region_id
+  irrigation_sources:
+    no_irrigation': 0
+    canals: 1
+    well: 2
+    tubewell: 3
+    tank: 4
+    other: 5

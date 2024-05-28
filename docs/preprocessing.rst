@@ -2,53 +2,36 @@
 Preprocessing
 ##############
 
-GEB uses HydroMT to preprocess all data required for the model. HydroMT (Hydro Model Tools) is an open-source Python package that facilitates the process of building and analyzing spatial geoscientific models with a focus on water system models. It does so by automating the workflow to go from raw data to a complete model instance which is ready to run. This plugin provides an implementation for the GEB model, which can be found `here <https://github.com/GEB-model/hydromt_geb>`_.
+GEB uses HydroMT to preprocess all data required for the model. HydroMT (Hydro Model Tools) is an open-source Python package that facilitates the process of building and analyzing spatial geoscientific models with a focus on water system models. It does so by automating the workflow to go from raw data to a complete model instance which is ready to run. This plugin provides an implementation for the GEB model, which can be found `here <https://github.com/jensdebruijn/hydromt_geb>`_.
+
+Installing hydromt-geb
+----------------------
+Hydromt-geb should be installed with the GEB model, but if not it can be installed using pip:
+
+.. code-block:: bash
+
+    pip install git+https://github.com/jensdebruijn/hydromt_geb.git
 
 Obtaining the data
 ------------------
 Most of the data that the HydroMT plugin uses to create the input data for GEB is downloaded by the tool itself when it is run. However, some data needs to be aquired seperately. To obtain this data, please send an email to Jens de Bruijn (jens.de.bruijn@vu.nl).
 
-Building to model
--------------------
-To set up the model you need two files, a `model.yml`-file and a `build.yml`-file. The `model.yml`-file specifies the configuration of the model, including start and end time of model runs, agent-paramters etc. The `build.yml`-file specifies the configuration of the preprocessing. An example of the `model.yml`-file and `build.yml`-file are provided in the repository.
+Preprocessing
+-------------
+The preprocessing contains two steps:
+1. Creating all non-agent data
+2. Creating all data for agent attributes
 
-The `build.yml`-file contains the name of functions that should be run to preprocess the data. The functions are defined in the HydroMT-geb plugin of HydroMT. You can build the model using the following command, assuming you are in the working directory of the model which contains the `model.yml`-file and `build.yml`-file:
-
-.. code-block:: python
-
-    geb build
-
-This will preprocess all the data required for the model. The data will be stored in the "input" folder in the working directory. The data is stored in a format that is compatible with the GEB model. Optionally, you can specify the path to the `build.yml`-file using the `-b/--build-config` flag, and the path to the `model.yml`-file using the `-c/--config` flag. You can find more information about the flags by running:
+The file build_model.py contains the code to build the model, including step 1 and 2. In this script the agent attributes are generated randomly. This allows you to quickly try to model. As input, build_model.py requires a configuration file, which specifies the pour point (pour_point) of the (sub-)basin in the "general" section of the yml-file. This file also contains all other parameters that are required to run the model. The configuration file is a YAML file. An example configuration file is provided in the repository (sandbox.yml). Here, you need to both specify the config (containing paths for the input data) and build configuration file. Then run the following command:
 
 .. code-block:: python
 
-    geb build --help
+    geb build --config model.yml --build build.yml
 
-Updating the model
--------------------
-
-It is also possible to update an already existing model by running the following command.
+For more advanced uses, in particular when the distribution of farmers depend on the preprocessing of land use data for the model, you can also build the model, and later update the farmers. To do so you can use `geb update`. First create a csv-file with farmer characteristics contain the following columns: season_#1_crop, season_#2_crop, season_#3_crop, irrigation_source, household_size, daily_non_farm_income_family and daily_consumption_per_capita. The csv file "agents/farmers/farmers.csv" is best located in the preprocessing folder, which was created with "geb build". An example for creating such a csv file based on the land use and census data, is provided in "examples/sandbox/create_farmers.py". Now you need to provide another yml file which specifies the update data for hydromMT. For the farmers, an example is provided in "examples/sandbox/update_farmers.yml". Then run the following command:
 
 .. code-block:: python
 
-    geb update
+    geb update --config model.yml --build-update build_farmers.yml
 
-This assumes you have a "update.yml"-file in the working directory. The `update.yml`-file contains the name of functions that should be run to update the data. The functions are defined in the "geb" plugin of HydroMT. The data will be updated in the "input" folder in the working directory. The data is stored in a format that is compatible with the GEB model.
-
-For example to update the forcing data of the model, your "update.yml"-file could look like this:
-
-.. code-block:: yaml
-
-    setup_forcing:
-        data_source: isimip
-        starttime: 1979-01-01
-        endtime: 2080-12-31
-        resolution_arcsec: 1800
-        forcing: gfdl-esm4
-        ssp: ssp370
-
-Optionally, you can specify the path to the "update.yml"-file using the `-b/--build-config` flag, and the path to the `model.yml`-file using the `-c/--config` flag. You can find more information about the flags by running:
-
-.. code-block:: python
-
-    geb update --help
+`geb update` can also be used to update other parts of (already) preprocessed data by making another yml file with only the functions that should be updated and running `geb update` with that yml-file.

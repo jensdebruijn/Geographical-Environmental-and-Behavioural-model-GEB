@@ -7,7 +7,7 @@ from pathlib import Path
 from cwatm.cwatm_model import CWATModel
 from cwatm.management_modules.dynamicModel import ModelFrame
 from cwatm.management_modules.configuration import parse_configuration
-from cwatm.management_modules.globals import settingsfile, binding, outDir, Flags
+from cwatm.management_modules.globals import settingsfile, binding, outDir
 from cwatm.run_cwatm import headerinfo
 
 
@@ -33,8 +33,6 @@ class CWatM_Model(CWATModel):
         parse_configuration(settings)
 
         outDir["OUTPUT"] = self.report_folder
-        Flags["quiet"] = True
-        Flags["veryquiet"] = True
 
         # calibration
         for parameter, value in self.config["parameters"].items():
@@ -60,6 +58,9 @@ class CWatM_Model(CWATModel):
         binding["ElevationStD"] = self.model_structure["grid"][
             "landsurface/topo/elevation_STD"
         ]
+        binding["elevation"] = self.model_structure["grid"][
+            "landsurface/topo/elevation"
+        ]
         binding["CellArea"] = self.model_structure["grid"]["areamaps/cell_area"]
         binding["cropgroupnumber"] = self.model_structure["grid"]["soil/cropgrp"]
         binding["KSat1"] = self.model_structure["grid"]["soil/ksat1"]
@@ -77,6 +78,41 @@ class CWatM_Model(CWATModel):
         binding["thetar1"] = self.model_structure["grid"]["soil/thetar1"]
         binding["thetar2"] = self.model_structure["grid"]["soil/thetar2"]
         binding["thetar3"] = self.model_structure["grid"]["soil/thetar3"]
+        binding["forest_fao_ksat1"] = self.model_structure["grid"]["soil/forest_fao_ksat1"]
+        binding["forest_fao_ksat2"] = self.model_structure["grid"]["soil/forest_fao_ksat2"]
+        binding["forest_fao_ksat3"] = self.model_structure["grid"]["soil/forest_fao_ksat3"]
+        binding["forest_fao_alpha1"] = self.model_structure["grid"]["soil/forest_fao_alpha1"]
+        binding["forest_fao_alpha2"] = self.model_structure["grid"]["soil/forest_fao_alpha2"]
+        binding["forest_fao_alpha3"] = self.model_structure["grid"]["soil/forest_fao_alpha3"]
+        binding["forest_fao_lambda1"] = self.model_structure["grid"]["soil/forest_fao_lambda1"]
+        binding["forest_fao_lambda2"] = self.model_structure["grid"]["soil/forest_fao_lambda2"]
+        binding["forest_fao_lambda3"] = self.model_structure["grid"]["soil/forest_fao_lambda3"]
+        binding["forest_fao_thetas1"] = self.model_structure["grid"]["soil/forest_fao_thetas1"]
+        binding["forest_fao_thetas2"] = self.model_structure["grid"]["soil/forest_fao_thetas2"]
+        binding["forest_fao_thetas3"] = self.model_structure["grid"]["soil/forest_fao_thetas3"]
+        binding["forest_fao_thetar1"] = self.model_structure["grid"]["soil/forest_fao_thetar1"]
+        binding["forest_fao_thetar2"] = self.model_structure["grid"]["soil/forest_fao_thetar2"]
+        binding["forest_fao_thetar3"] = self.model_structure["grid"]["soil/forest_fao_thetar3"]
+        binding["agr_fao_alpha1"] = self.model_structure["grid"]["soil/agr_fao_alpha1"]
+        binding["agr_fao_alpha2"] = self.model_structure["grid"]["soil/agr_fao_alpha2"]
+        binding["agr_fao_alpha3"] = self.model_structure["grid"]["soil/agr_fao_alpha3"]
+        binding["agr_fao_KSat1"] = self.model_structure["grid"]["soil/agr_fao_ksat1"]
+        binding["agr_fao_KSat2"] = self.model_structure["grid"]["soil/agr_fao_ksat2"]
+        binding["agr_fao_KSat3"] = self.model_structure["grid"]["soil/agr_fao_ksat3"]
+        binding["agr_fao_lambda1"] = self.model_structure["grid"]["soil/agr_fao_lambda1"]
+        binding["agr_fao_lambda2"] = self.model_structure["grid"]["soil/agr_fao_lambda2"]
+        binding["agr_fao_lambda3"] = self.model_structure["grid"]["soil/agr_fao_lambda3"]
+        binding["agr_fao_thetar1"] = self.model_structure["grid"]["soil/agr_fao_thetar1"]
+        binding["agr_fao_thetar2"] = self.model_structure["grid"]["soil/agr_fao_thetar2"]
+        binding["agr_fao_thetar3"] = self.model_structure["grid"]["soil/agr_fao_thetar3"]
+        binding["agr_fao_thetas1"] = self.model_structure["grid"]["soil/agr_fao_thetas1"]
+        binding["agr_fao_thetas2"] = self.model_structure["grid"]["soil/agr_fao_thetas2"]
+        binding["agr_fao_thetas3"] = self.model_structure["grid"]["soil/agr_fao_thetas3"]
+        binding["grs_fao_ksat2"] = self.model_structure["grid"]["soil/grs_fao_ksat2"]  
+        binding["slope"] = self.model_structure["grid"]["landsurface/topo/slope"]
+
+        binding["forest_types"] = self.model_structure["grid"]["landsurface/forest_types"]
+
         binding["percolationImp"] = self.model_structure["grid"][
             "soil/percolation_impeded"
         ]
