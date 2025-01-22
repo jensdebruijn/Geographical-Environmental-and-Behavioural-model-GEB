@@ -1,0 +1,179 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Preprocessing &mdash; GEB  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5dd5ad26" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5be48651"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=27b9c81c"></script>
+      <script src="_static/doctools.js?v=695de88e"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="next" title="Running the model" href="running.html" />
+    <link rel="prev" title="Configuration" href="configuration.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            GEB
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Preprocessing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#obtaining-the-data">Obtaining the data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#building-to-model">Building to model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#updating-the-model">Updating the model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">Running the model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="calibration.html">Calibration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ODD/ODD.html">ODD protocol</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Agents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="agents/__init__.html">Agents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="agents/farmers.html">Farmers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="agents/government.html">Government</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="model.html">Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cwatm_model.html">CWatM Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="report.html">Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="HRUs.html">Farm-level HRUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="artists.html">Artists</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">About</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="authors_page.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updates.html">Updates</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">GEB</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Preprocessing</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/preprocessing.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="preprocessing">
+<h1>Preprocessing<a class="headerlink" href="#preprocessing" title="Link to this heading"></a></h1>
+<p>GEB uses HydroMT to preprocess all data required for the model. HydroMT (Hydro Model Tools) is an open-source Python package that facilitates the process of building and analyzing spatial geoscientific models with a focus on water system models. It does so by automating the workflow to go from raw data to a complete model instance which is ready to run. This plugin provides an implementation for the GEB model, which can be found <a class="reference external" href="https://github.com/GEB-model/hydromt_geb">here</a>.</p>
+<section id="obtaining-the-data">
+<h2>Obtaining the data<a class="headerlink" href="#obtaining-the-data" title="Link to this heading"></a></h2>
+<p>Most of the data that the HydroMT plugin uses to create the input data for GEB is downloaded by the tool itself when it is run. However, some data needs to be aquired seperately. To obtain this data, please send an email to Jens de Bruijn (<a class="reference external" href="mailto:jens&#46;de&#46;bruijn&#37;&#52;&#48;vu&#46;nl">jens<span>&#46;</span>de<span>&#46;</span>bruijn<span>&#64;</span>vu<span>&#46;</span>nl</a>).</p>
+</section>
+<section id="building-to-model">
+<h2>Building to model<a class="headerlink" href="#building-to-model" title="Link to this heading"></a></h2>
+<p>To set up the model you need two files, a <cite>model.yml</cite>-file and a <cite>build.yml</cite>-file. The <cite>model.yml</cite>-file specifies the configuration of the model, including start and end time of model runs, agent-paramters etc. The <cite>build.yml</cite>-file specifies the configuration of the preprocessing. An example of the <cite>model.yml</cite>-file and <cite>build.yml</cite>-file are provided in the repository.</p>
+<p>The <cite>build.yml</cite>-file contains the name of functions that should be run to preprocess the data. The functions are defined in the HydroMT-geb plugin of HydroMT. You can build the model using the following command, assuming you are in the working directory of the model which contains the <cite>model.yml</cite>-file and <cite>build.yml</cite>-file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">geb</span> <span class="n">build</span>
+</pre></div>
+</div>
+<p>This will preprocess all the data required for the model. The data will be stored in the “input” folder in the working directory. The data is stored in a format that is compatible with the GEB model. Optionally, you can specify the path to the <cite>build.yml</cite>-file using the <cite>-b/–build-config</cite> flag, and the path to the <cite>model.yml</cite>-file using the <cite>-c/–config</cite> flag. You can find more information about the flags by running:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">geb</span> <span class="n">build</span> <span class="o">--</span><span class="n">help</span>
+</pre></div>
+</div>
+</section>
+<section id="updating-the-model">
+<h2>Updating the model<a class="headerlink" href="#updating-the-model" title="Link to this heading"></a></h2>
+<p>It is also possible to update an already existing model by running the following command.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">geb</span> <span class="n">update</span>
+</pre></div>
+</div>
+<p>This assumes you have a “update.yml”-file in the working directory. The <cite>update.yml</cite>-file contains the name of functions that should be run to update the data. The functions are defined in the “geb” plugin of HydroMT. The data will be updated in the “input” folder in the working directory. The data is stored in a format that is compatible with the GEB model.</p>
+<p>For example to update the forcing data of the model, your “update.yml”-file could look like this:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">setup_forcing</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">data_source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">isimip</span>
+<span class="w">    </span><span class="nt">starttime</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1979-01-01</span>
+<span class="w">    </span><span class="nt">endtime</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2080-12-31</span>
+<span class="w">    </span><span class="nt">resolution_arcsec</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1800</span>
+<span class="w">    </span><span class="nt">forcing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gfdl-esm4</span>
+<span class="w">    </span><span class="nt">ssp</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ssp370</span>
+</pre></div>
+</div>
+<p>Optionally, you can specify the path to the “update.yml”-file using the <cite>-b/–build-config</cite> flag, and the path to the <cite>model.yml</cite>-file using the <cite>-c/–config</cite> flag. You can find more information about the flags by running:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">geb</span> <span class="n">update</span> <span class="o">--</span><span class="n">help</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="configuration.html" class="btn btn-neutral float-left" title="Configuration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="running.html" class="btn btn-neutral float-right" title="Running the model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; <a href="copyright.html">Copyright</a> 2023, VU-IVM and IIASA.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

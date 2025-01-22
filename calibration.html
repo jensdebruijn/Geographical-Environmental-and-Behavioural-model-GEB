@@ -1,0 +1,292 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calibration &mdash; GEB  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5dd5ad26" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5be48651"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=27b9c81c"></script>
+      <script src="_static/doctools.js?v=695de88e"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="next" title="ODD+D protocol" href="ODD/ODD.html" />
+    <link rel="prev" title="Visualisation" href="visualisation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            GEB
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">Running the model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="visualisation.html">Visualisation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Calibration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ODD/ODD.html">ODD protocol</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Agents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="agents/__init__.html">Agents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="agents/farmers.html">Farmers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="agents/government.html">Government</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="model.html">Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cwatm_model.html">CWatM Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="report.html">Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="HRUs.html">Farm-level HRUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="artists.html">Artists</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">About</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="authors_page.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updates.html">Updates</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">GEB</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Calibration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/calibration.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="calibration">
+<h1>Calibration<a class="headerlink" href="#calibration" title="Link to this heading"></a></h1>
+<p>GEB has a prebuilt calibration function. It can be used for both one- and multi-objective optimization. To run the calibration follow the steps below. Use the command below, setting the <cite>-wd</cite> command to the folder that includes your <cite>model.yml</cite> file. See also the <cite>.sh</cite> script for Linux cluster runs below.</p>
+<ol class="arabic">
+<li><p>Determine which objectives/factors you want to calibrate. Add a function which calculates the score to <cite>calibrate.py</cite> and conditionally add the function to the code in <cite>calibrate.py</cite> below. Lastly, activate the function under <cite>calibration_targets</cite> in the <cite>model.yml</cite> file. For the rest of the steps, we will assume calibration on discharge data.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;calibration&#39;</span><span class="p">][</span><span class="s1">&#39;calibration_targets&#39;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">score</span> <span class="o">==</span> <span class="s1">&#39;KGE_discharge&#39;</span><span class="p">:</span>
+        <span class="n">scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_KGE_discharge</span><span class="p">(</span><span class="n">run_directory</span><span class="p">,</span> <span class="n">individual</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">gauges</span><span class="p">,</span> <span class="n">observed_streamflow</span><span class="p">))</span>
+</pre></div>
+</div>
+</li>
+<li><p>Determine the location of the gauge(s) for which you have observed discharge data. Make sure the coordinates match with the location of the river in the model. Do this by checking the upstream_area file of your model (input/routing/kinematic/upstream_area) and checking the location of the gauge(s). The location of the gauge should be in the river. The observed discharge data should be stored as a <cite>.csv</cite> file where the file name is the coordinates without a comma separation (in this example: “75.8477777 17.4130555.csv”). The first column should be “date” and the second “flow”, i.e.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">date</span><span class="p">,</span> <span class="n">flow</span>
+<span class="mi">2001</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">21</span><span class="p">,</span><span class="mf">184.8000031</span>
+</pre></div>
+</div>
+<p>Make sure to check which symbol is used as the seperator in the csv. file. In the calibration script, the comma (,) is assumed to be the seperator in the .csv file.</p>
+</li>
+<li><p>Store this file in the location below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">original_data</span><span class="o">/</span><span class="n">calibration</span><span class="o">/</span><span class="n">streamflow</span><span class="o">/</span><span class="mf">75.8477777</span> <span class="mf">17.4130555</span><span class="o">.</span><span class="n">csv</span>
+</pre></div>
+</div>
+<p>If this folder does not yet exist, create the folder manually and (if needed) change the path in the model.yml file.</p>
+</li>
+<li><p>Next, add this location under <cite>gauges</cite> in the <cite>model.yml</cite> file and under <cite>target_variables</cite> and <cite>report_hydrology</cite>. See the example of the <cite>model.yml</cite> file below.</p></li>
+<li><p>For multiple observed locations of observed data the process is similar, just repeat step 2 to 4.</p></li>
+<li><p>Add the parameters you want calibrated under <cite>parameters</cite> in the <cite>model.yml</cite> file. First set a min and max. After, set the variable name, which refers to the location in the overall <cite>model.yml</cite> file, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">expenditure_cap</span><span class="p">:</span>
+    <span class="n">variable</span><span class="p">:</span> <span class="n">agent_settings</span><span class="o">.</span><span class="n">expected_utility</span><span class="o">.</span><span class="n">decisions</span><span class="o">.</span><span class="n">expenditure_cap</span>
+    <span class="nb">min</span><span class="p">:</span> <span class="mf">0.05</span>
+    <span class="nb">max</span><span class="p">:</span> <span class="mf">0.4</span>
+</pre></div>
+</div>
+<p>would setup calibration for x between 0.05 and 0.4 for the following variable:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">agent_settings</span><span class="p">:</span>
+    <span class="n">expected_utility</span><span class="p">:</span>
+        <span class="n">decisions</span><span class="p">:</span>
+            <span class="n">expenditure</span> <span class="n">cap</span><span class="p">:</span> <span class="n">x</span>
+</pre></div>
+</div>
+</li>
+<li><p>Next, set the DEAP parameters. <cite>ngen</cite> specifies the number of total generations, <cite>mu</cite> the initial population size, <cite>lambda</cite> the number of children to produce at each generation, and <cite>select_best</cite> controls the number of best individuals selected from the population for the next generation.</p></li>
+<li><p>Lastly, run the model with the command below, or use a bash script to run it on the cluster.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>geb<span class="w"> </span>calibrate<span class="w"> </span>-wd<span class="w"> </span>location/of/your_model.yml/folder
+</pre></div>
+</div>
+<p># An example of a Linux bash script calling the calibration. Note: the cpus-per-task command sets the number of parallel runs if multiprocessing is enabled.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>#!/bin/bash
+#SBATCH --job-name=
+#SBATCH --output=logs/calibrate-%j.out
+#SBATCH --ntasks=1
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=30
+#SBATCH --mem=120G
+#SBATCH --time=600:00:00
+#SBATCH --mail-type=END,FAIL
+#SBATCH --mail-user=
+
+echo $1
+
+source ~/.bashrc
+
+SCRIPT_DIR=&quot;$HOME/GEB/GEB_models/&quot;
+cd $SCRIPT_DIR
+
+conda activate geeb  # activate conda environment
+
+cd models/
+geb calibrate -wd $1/base
+
+echo &quot;done&quot;
+</pre></div>
+</div>
+<p># Running the bash script with your study area of choice (here the Bhima Basin):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sbatch</span> <span class="s2">&quot;path_to/script/bash.sh&quot;</span> <span class="n">bhima</span>
+</pre></div>
+</div>
+<p># Example <cite>model.yml</cite> with settings for the calibration</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gauges</span><span class="p">:</span>
+    <span class="o">-</span> <span class="p">[</span><span class="mf">75.8477777</span><span class="p">,</span> <span class="mf">17.41305556</span><span class="p">]</span>
+<span class="n">calibration</span><span class="p">:</span>
+  <span class="n">pre_spinup_time</span><span class="p">:</span> <span class="mi">1980</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>
+  <span class="n">spinup_time</span><span class="p">:</span> <span class="mi">1980</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>
+  <span class="n">start_time</span><span class="p">:</span> <span class="mi">2001</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>
+  <span class="n">end_time</span><span class="p">:</span> <span class="mi">2011</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">31</span>
+  <span class="n">path</span><span class="p">:</span> <span class="n">calibration_multi_5</span>
+  <span class="n">gpus</span><span class="p">:</span> <span class="mi">0</span>
+  <span class="n">scenario</span><span class="p">:</span> <span class="n">adaptation</span>
+  <span class="n">monthly</span><span class="p">:</span> <span class="n">false</span>
+  <span class="n">calibration_targets</span><span class="p">:</span>
+    <span class="n">KGE_discharge</span><span class="p">:</span> <span class="mi">1</span>
+  <span class="n">DEAP</span><span class="p">:</span>
+    <span class="n">use_multiprocessing</span><span class="p">:</span> <span class="n">true</span>
+    <span class="n">ngen</span><span class="p">:</span> <span class="mi">10</span>
+    <span class="n">mu</span><span class="p">:</span> <span class="mi">60</span>
+    <span class="n">lambda_</span><span class="p">:</span> <span class="mi">25</span>
+    <span class="n">select_best</span><span class="p">:</span> <span class="mi">10</span>
+  <span class="n">target_variables</span><span class="p">:</span>
+    <span class="c1"># Variables required to calculate calibration score from cwatm, e.g. discharge at a certain gauge</span>
+    <span class="n">report_hydrology</span><span class="p">:</span>
+        <span class="mf">75.8477777</span> <span class="mf">17.41305556</span><span class="p">:</span>
+            <span class="n">varname</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">discharge</span>
+            <span class="n">function</span><span class="p">:</span> <span class="n">sample_coord</span><span class="p">,</span><span class="mf">75.8477777</span><span class="p">,</span><span class="mf">17.41305556</span>
+            <span class="nb">format</span><span class="p">:</span> <span class="n">csv</span>
+            <span class="n">save</span><span class="p">:</span> <span class="n">save</span>
+    <span class="c1"># Variables required to calculate calibration from GEB, e.g. yield ratio</span>
+    <span class="n">report</span><span class="p">:</span>
+        <span class="n">yield_ratio</span><span class="p">:</span>
+            <span class="nb">type</span><span class="p">:</span> <span class="n">farmers</span>
+            <span class="n">function</span><span class="p">:</span> <span class="n">mean</span>
+            <span class="n">varname</span><span class="p">:</span> <span class="n">yearly_yield_ratio</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">save</span><span class="p">:</span> <span class="n">save</span>
+            <span class="nb">format</span><span class="p">:</span> <span class="n">csv</span>
+            <span class="n">frequency</span><span class="p">:</span>
+              <span class="n">every</span><span class="p">:</span> <span class="n">month</span>
+              <span class="n">day</span><span class="p">:</span> <span class="mi">1</span>
+    <span class="c1"># The to be calibrated parameters</span>
+    <span class="n">parameters</span><span class="p">:</span>
+        <span class="n">soildepth_factor</span><span class="p">:</span>
+            <span class="n">variable</span><span class="p">:</span> <span class="n">parameters</span><span class="o">.</span><span class="n">soildepth_factor</span>
+            <span class="nb">min</span><span class="p">:</span> <span class="mf">0.8</span>
+            <span class="nb">max</span><span class="p">:</span> <span class="mf">1.8</span>
+        <span class="n">preferentialFlowConstant</span><span class="p">:</span>
+            <span class="n">variable</span><span class="p">:</span> <span class="n">parameters</span><span class="o">.</span><span class="n">preferentialFlowConstant</span>
+            <span class="nb">min</span><span class="p">:</span> <span class="mf">0.5</span>
+            <span class="nb">max</span><span class="p">:</span> <span class="mi">8</span>
+        <span class="n">arnoBeta_add</span><span class="p">:</span>
+            <span class="n">variable</span><span class="p">:</span> <span class="n">parameters</span><span class="o">.</span><span class="n">arnoBeta_add</span>
+            <span class="nb">min</span><span class="p">:</span> <span class="mf">0.01</span>
+            <span class="nb">max</span><span class="p">:</span> <span class="mf">1.0</span>
+        <span class="n">factor_interflow</span><span class="p">:</span>
+            <span class="n">variable</span><span class="p">:</span> <span class="n">parameters</span><span class="o">.</span><span class="n">factor_interflow</span>
+            <span class="nb">min</span><span class="p">:</span> <span class="mf">0.33</span>
+            <span class="nb">max</span><span class="p">:</span> <span class="mf">3.0</span>
+        <span class="n">recessionCoeff_factor</span><span class="p">:</span>
+            <span class="n">variable</span><span class="p">:</span> <span class="n">parameters</span><span class="o">.</span><span class="n">recessionCoeff_factor</span>
+            <span class="nb">min</span><span class="p">:</span> <span class="mf">0.05</span>
+            <span class="nb">max</span><span class="p">:</span> <span class="mi">10</span>
+        <span class="n">manningsN</span><span class="p">:</span>
+            <span class="n">variable</span><span class="p">:</span> <span class="n">parameters</span><span class="o">.</span><span class="n">manningsN</span>
+            <span class="nb">min</span><span class="p">:</span> <span class="mf">0.1</span>
+            <span class="nb">max</span><span class="p">:</span> <span class="mf">10.0</span>
+        <span class="n">lakeAFactor</span><span class="p">:</span>
+            <span class="n">variable</span><span class="p">:</span> <span class="n">parameters</span><span class="o">.</span><span class="n">lakeAFactor</span>
+            <span class="nb">min</span><span class="p">:</span> <span class="mf">0.333</span>
+            <span class="nb">max</span><span class="p">:</span> <span class="mf">5.0</span>
+        <span class="n">lakeEvaFactor</span><span class="p">:</span>
+            <span class="n">variable</span><span class="p">:</span> <span class="n">parameters</span><span class="o">.</span><span class="n">lakeEvaFactor</span>
+            <span class="nb">min</span><span class="p">:</span> <span class="mf">0.8</span>
+            <span class="nb">max</span><span class="p">:</span> <span class="mf">3.0</span>
+        <span class="n">max_reservoir_release_factor</span><span class="p">:</span>
+            <span class="n">variable</span><span class="p">:</span> <span class="n">agent_settings</span><span class="o">.</span><span class="n">reservoir_operators</span><span class="o">.</span><span class="n">max_reservoir_release_factor</span>
+            <span class="nb">min</span><span class="p">:</span> <span class="mf">0.01</span>
+            <span class="nb">max</span><span class="p">:</span> <span class="mf">0.05</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="visualisation.html" class="btn btn-neutral float-left" title="Visualisation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ODD/ODD.html" class="btn btn-neutral float-right" title="ODD+D protocol" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; <a href="copyright.html">Copyright</a> 2023, VU-IVM and IIASA.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

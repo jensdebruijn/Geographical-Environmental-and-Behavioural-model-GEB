@@ -1,0 +1,619 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hydrological response units &mdash; GEB  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5dd5ad26" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5be48651"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=27b9c81c"></script>
+      <script src="_static/doctools.js?v=695de88e"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="next" title="Artists" href="artists.html" />
+    <link rel="prev" title="Report" href="report.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            GEB
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">Running the model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="calibration.html">Calibration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ODD/ODD.html">ODD protocol</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Agents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="agents/__init__.html">Agents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="agents/farmers.html">Farmers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="agents/government.html">Government</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="model.html">Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cwatm_model.html">CWatM Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="report.html">Report</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Farm-level HRUs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#geb.HRUs.BaseVariables"><code class="docutils literal notranslate"><span class="pre">BaseVariables</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#geb.HRUs.BaseVariables.M3toM"><code class="docutils literal notranslate"><span class="pre">BaseVariables.M3toM()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geb.HRUs.BaseVariables.MtoM3"><code class="docutils literal notranslate"><span class="pre">BaseVariables.MtoM3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geb.HRUs.BaseVariables.plot"><code class="docutils literal notranslate"><span class="pre">BaseVariables.plot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geb.HRUs.BaseVariables.register_initial_data"><code class="docutils literal notranslate"><span class="pre">BaseVariables.register_initial_data()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#geb.HRUs.Data"><code class="docutils literal notranslate"><span class="pre">Data</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#geb.HRUs.Data.to_HRU"><code class="docutils literal notranslate"><span class="pre">Data.to_HRU()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geb.HRUs.Data.to_grid"><code class="docutils literal notranslate"><span class="pre">Data.to_grid()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#geb.HRUs.Grid"><code class="docutils literal notranslate"><span class="pre">Grid</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#geb.HRUs.Grid.compress"><code class="docutils literal notranslate"><span class="pre">Grid.compress()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geb.HRUs.Grid.decompress"><code class="docutils literal notranslate"><span class="pre">Grid.decompress()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geb.HRUs.Grid.full"><code class="docutils literal notranslate"><span class="pre">Grid.full()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geb.HRUs.Grid.full_compressed"><code class="docutils literal notranslate"><span class="pre">Grid.full_compressed()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geb.HRUs.Grid.load"><code class="docutils literal notranslate"><span class="pre">Grid.load()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geb.HRUs.Grid.plot"><code class="docutils literal notranslate"><span class="pre">Grid.plot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geb.HRUs.Grid.plot_compressed"><code class="docutils literal notranslate"><span class="pre">Grid.plot_compressed()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#geb.HRUs.HRUs"><code class="docutils literal notranslate"><span class="pre">HRUs</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#geb.HRUs.HRUs.compressed_size"><code class="docutils literal notranslate"><span class="pre">HRUs.compressed_size</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geb.HRUs.HRUs.create_HRUs"><code class="docutils literal notranslate"><span class="pre">HRUs.create_HRUs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geb.HRUs.HRUs.create_HRUs_numba"><code class="docutils literal notranslate"><span class="pre">HRUs.create_HRUs_numba()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geb.HRUs.HRUs.decompress"><code class="docutils literal notranslate"><span class="pre">HRUs.decompress()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geb.HRUs.HRUs.full_compressed"><code class="docutils literal notranslate"><span class="pre">HRUs.full_compressed()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geb.HRUs.HRUs.plot"><code class="docutils literal notranslate"><span class="pre">HRUs.plot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geb.HRUs.HRUs.zeros"><code class="docutils literal notranslate"><span class="pre">HRUs.zeros()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#geb.HRUs.Modflow"><code class="docutils literal notranslate"><span class="pre">Modflow</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#geb.HRUs.to_HRU"><code class="docutils literal notranslate"><span class="pre">to_HRU()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#geb.HRUs.to_grid"><code class="docutils literal notranslate"><span class="pre">to_grid()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="artists.html">Artists</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">About</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="authors_page.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updates.html">Updates</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">GEB</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Hydrological response units</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/HRUs.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="hydrological-response-units">
+<h1>Hydrological response units<a class="headerlink" href="#hydrological-response-units" title="Link to this heading"></a></h1>
+<p>Most geographical models, including hydrological models, work using cells. This is essentially an area on the map that responds as a unit. The resolution of the grid varies, depending on the required detail of the simulation, computational run-time, availablity of input data among others. (Near-) square cells are very useful in this respect, because input data (such as satellite observations) are often available in a grid. CWatM, like most hydrological models, operates at these grids. For each cell, various land use types are modelled, and then aggregated to the cell level while considering the relative sizes of the land use types in that particular cell. Farmers occupy non-irrigated land, paddy-irrigated land, and non-paddy irrigated land. However, when a single land use type is shared among multiple farmers, their hydrological environment is shared, and thus must respond identically.</p>
+<p>This creates an issue for agent-based models, where implementation of heterogeneous decision-making is required. For example, when one farmer decides to irrigate and other does not, the soil moisture in their fields should also be represented separately. Therefore, we use the concept of <cite>HRUs</cite>. To create the <cite>HRUs</cite>, each individual field owned by a farmer becomes a <cite>HRU</cite> first. Then, in addition, each other land use type becomes a separate HRU. <cite>HRUs</cite> never cross cell boundaries. This means that farmers whose fields are dispersed across multiple cells are simulated by multiple <cite>HRUs</cite>. Here, we assume that each <cite>HRU</cite>, is relatively homogeneous as it each <cite>HRU</cite> is operated by 1) a single farmer, or by a single other (i.e., non-farm) land-use type and 2) never crosses the boundary a hydrological model cell. This concept is similar to hydrological response units (HRUs), but operates at the sub-grid level rather than the basin level and delineation of the units is performed differently.</p>
+<img alt="_images/HRUs.png" src="_images/HRUs.png" />
+<p>The figure above displays how this works in practice. Grid cells in the hydrological model are separated by the regular horizontal and vertical black lines. The left panel displays the various land use types, the moddle panel the farmers that own the cropland, and the rightmost panel shows the resulting hydrological units. Note that each contiguous area in the middle and right panel of a single color is one field or hydrological unit respectively, while separated areas are different fields or hydrological units. One exception is the hydrological units of the same land use type that are not owned by agents. These are represented by a single hydrological unit if they are encompassed within a single cell.</p>
+<p>While soil processes are simulated in the HRUs (e.g., percolation, capillary rise, and evapotranspiration), other hydrological processes such as discharge are calculated at the grid cell level. To this extent, the class <code class="xref py py-class docutils literal notranslate"><span class="pre">HRUs.Data</span></code> also contains functions to convert from HRUs to grid cells (<code class="xref py py-meth docutils literal notranslate"><span class="pre">HRUs.Data.to_HRU()</span></code>) and vice versa (<code class="xref py py-meth docutils literal notranslate"><span class="pre">HRUs.Data.to_grid()</span></code>). The figure below shows how <cite>runoff</cite> from the HRUs is aggregated by considering relative sizes of the HRUs, and added to discharge. CWatM then solves the kinematic wave equation at the grid cell level.</p>
+<img alt="_images/aggregate_HRUs.svg" class="align-center" src="_images/aggregate_HRUs.svg" />
+<dl class="py class" id="module-geb.HRUs">
+<dt class="sig sig-object py" id="geb.HRUs.BaseVariables">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BaseVariables</span></span><a class="reference internal" href="_modules/geb/HRUs.html#BaseVariables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.HRUs.BaseVariables" title="Link to this definition"></a></dt>
+<dd><p>This class has some basic functions that can be used for variables regardless of scale.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="geb.HRUs.BaseVariables.M3toM">
+<span class="sig-name descname"><span class="pre">M3toM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/HRUs.html#BaseVariables.M3toM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.HRUs.BaseVariables.M3toM" title="Link to this definition"></a></dt>
+<dd><p>Convert array from cubic meters to meters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>array</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – Data in cubic meters.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>array</strong> – Data in meters.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geb.HRUs.BaseVariables.MtoM3">
+<span class="sig-name descname"><span class="pre">MtoM3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/HRUs.html#BaseVariables.MtoM3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.HRUs.BaseVariables.MtoM3" title="Link to this definition"></a></dt>
+<dd><p>Convert array from meters to cubic meters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>array</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – Data in meters.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>array</strong> – Data in cubic meters.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geb.HRUs.BaseVariables.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/HRUs.html#BaseVariables.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.HRUs.BaseVariables.plot" title="Link to this definition"></a></dt>
+<dd><p>Create a simple plot for data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – Array to plot.</p></li>
+<li><p><strong>ax</strong> – Optional matplotlib axis object. If given, data will be plotted on given axes.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geb.HRUs.BaseVariables.register_initial_data">
+<span class="sig-name descname"><span class="pre">register_initial_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/HRUs.html#BaseVariables.register_initial_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.HRUs.BaseVariables.register_initial_data" title="Link to this definition"></a></dt>
+<dd><p>Register initial data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="geb.HRUs.Data">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/HRUs.html#Data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.HRUs.Data" title="Link to this definition"></a></dt>
+<dd><p>The base data class for the GEB model. This class contains the data for the normal grid, the HRUs, and has methods to convert between the grid and HRUs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> – The GEB model.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="geb.HRUs.Data.to_HRU">
+<span class="sig-name descname"><span class="pre">to_HRU</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/HRUs.html#Data.to_HRU"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.HRUs.Data.to_HRU" title="Link to this definition"></a></dt>
+<dd><p>Function to convert from grid to HRU (Hydrologic Response Units).</p>
+<p>This method is designed to transform spatial grid data into a format suitable for HRUs, which are used in to represent distinct areas with homogeneous land use, soil type, and management conditions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>array-like</em><em> or </em><em>None</em>) – The grid data to be converted. If this parameter is set, <cite>varname</cite> must not be provided. Data should be an array where each element corresponds to grid cell values.</p></li>
+<li><p><strong>fn</strong> (<em>str</em><em> or </em><em>None</em>) – The name of the function to apply to the data before assigning it to HRUs. If <cite>None</cite>, the data is used as is. This is usually the case for variables that are independent of area, like temperature or precipitation fluxes. If ‘weightedsplit’, the data will be adjusted according to the ratios of land use within each HRU. This is important when dealing with variables that are area-dependent like precipitation or runoff volumes.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>output_data</strong> (<em>array-like</em>) – Data converted to HRUs format. The structure and the type of the output depend on the input and the transformation function.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>Suppose we have an instance of a class with a grid property containing temperature data under the attribute name ‘temperature’. To convert this grid-based temperature data into HRU format, we would use:</p>
+<p><code class="docutils literal notranslate"><span class="pre">`python</span>
+<span class="pre">temperature_HRU</span> <span class="pre">=</span> <span class="pre">instance.to_HRU(data=temperature,</span> <span class="pre">fn=None)</span>
+<span class="pre">`</span></code></p>
+<p>This will fetch the temperature data from <cite>instance.grid.temperature</cite>, assigning the temperature to HRU within a grid cell. In other words, each HRU within a grid cell has the same temperature.</p>
+<p>Another example, where want to plant forest in all HRUs with grassland within an area specified by a boolean mask.</p>
+<p><code class="docutils literal notranslate"><span class="pre">`python</span>
+<span class="pre">mask_HRU</span> <span class="pre">=</span> <span class="pre">instance.to_HRU(data=mask_grid,</span> <span class="pre">fn=None)</span>
+<span class="pre">mask_HRU[land_use_type</span> <span class="pre">==</span> <span class="pre">grass_land_use_type]</span> <span class="pre">=</span> <span class="pre">False</span>&#160; <span class="pre">#</span> <span class="pre">set</span> <span class="pre">all</span> <span class="pre">non-grassland</span> <span class="pre">HRUs</span> <span class="pre">to</span> <span class="pre">False</span>
+<span class="pre">`</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geb.HRUs.Data.to_grid">
+<span class="sig-name descname"><span class="pre">to_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">HRU_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/HRUs.html#Data.to_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.HRUs.Data.to_grid" title="Link to this definition"></a></dt>
+<dd><p>Function to convert from HRUs to grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>HRU_data</strong> – The HRU data to be converted (if set, varname cannot be set).</p></li>
+<li><p><strong>fn</strong> – Name of function to apply to data. In most cases, several HRUs are combined into one grid unit, so a function must be applied. Choose from <cite>mean</cite>, <cite>sum</cite>, <cite>nansum</cite>, <cite>max</cite> and <cite>min</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ouput_data</strong> – Data converted to grid units.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="geb.HRUs.Grid">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/HRUs.html#Grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.HRUs.Grid" title="Link to this definition"></a></dt>
+<dd><p>This class is to store data in the ‘normal’ grid cells. This class works with compressed and uncompressed arrays. On initialization of the class, the mask of the study area is read from disk. This is the shape of any uncompressed array. Many values in this array, however, fall outside the stuy area as they are masked. Therefore, the array can be compressed by saving only the non-masked values.</p>
+<p>On initialization, as well as geotransformation and cell size are set, and the cell area is read from disk.</p>
+<p>Then, the mask is compressed by removing all masked cells, resulting in a compressed array.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="geb.HRUs.Grid.compress">
+<span class="sig-name descname"><span class="pre">compress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/HRUs.html#Grid.compress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.HRUs.Grid.compress" title="Link to this definition"></a></dt>
+<dd><p>Compress array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>array</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – Uncompressed array.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>array</strong> – Compressed array.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geb.HRUs.Grid.decompress">
+<span class="sig-name descname"><span class="pre">decompress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fillvalue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/HRUs.html#Grid.decompress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.HRUs.Grid.decompress" title="Link to this definition"></a></dt>
+<dd><p>Decompress array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>array</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – Compressed array.</p></li>
+<li><p><strong>fillvalue</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ufunc</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – Value to use for masked values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>array</strong> – Decompressed array.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geb.HRUs.Grid.full">
+<span class="sig-name descname"><span class="pre">full</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/HRUs.html#Grid.full"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.HRUs.Grid.full" title="Link to this definition"></a></dt>
+<dd><p>Return a full array with size of mask. Takes any other argument normally used in np.full.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Variable length argument list.</p></li>
+<li><p><strong>**kwargs</strong> – Arbitrary keyword arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geb.HRUs.Grid.full_compressed">
+<span class="sig-name descname"><span class="pre">full_compressed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/HRUs.html#Grid.full_compressed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.HRUs.Grid.full_compressed" title="Link to this definition"></a></dt>
+<dd><p>Return a full array with size of compressed array. Takes any other argument normally used in np.full.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Variable length argument list.</p></li>
+<li><p><strong>**kwargs</strong> – Arbitrary keyword arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geb.HRUs.Grid.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/HRUs.html#Grid.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.HRUs.Grid.load" title="Link to this definition"></a></dt>
+<dd><p>Load array from disk.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filepath</strong> – Filepath of map.</p></li>
+<li><p><strong>compress</strong> – Whether to compress array.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>array</strong> – Loaded array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geb.HRUs.Grid.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/HRUs.html#Grid.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.HRUs.Grid.plot" title="Link to this definition"></a></dt>
+<dd><p>Plot array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>array</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – Array to plot.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geb.HRUs.Grid.plot_compressed">
+<span class="sig-name descname"><span class="pre">plot_compressed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fillvalue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/HRUs.html#Grid.plot_compressed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.HRUs.Grid.plot_compressed" title="Link to this definition"></a></dt>
+<dd><p>Plot compressed array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>array</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – Compressed array to plot.</p></li>
+<li><p><strong>fillvalue</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ufunc</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – Value to use for masked values.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="geb.HRUs.HRUs">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">HRUs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/HRUs.html#HRUs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.HRUs.HRUs" title="Link to this definition"></a></dt>
+<dd><p>This class forms the basis for the HRUs. To create the <cite>HRUs</cite>, each individual field owned by a farmer becomes a <cite>HRU</cite> first. Then, in addition, each other land use type becomes a separate HRU. <cite>HRUs</cite> never cross cell boundaries. This means that farmers whose fields are dispersed across multiple cells are simulated by multiple <cite>HRUs</cite>. Here, we assume that each <cite>HRU</cite>, is relatively homogeneous as it each <cite>HRU</cite> is operated by 1) a single farmer, or by a single other (i.e., non-farm) land-use type and 2) never crosses the boundary a hydrological model cell.</p>
+<p>On initalization, the mask of the study area for the cells are loaded first, and a mask on the maximum resolution of the HRUs is created. In this case, the maximum resolution of the HRUs is 20 times higher than the mask. Then the HRUs are actually created.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – Data class for model.</p></li>
+<li><p><strong>model</strong> – The GEB model.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="geb.HRUs.HRUs.compressed_size">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compressed_size</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#geb.HRUs.HRUs.compressed_size" title="Link to this definition"></a></dt>
+<dd><p>Gets the compressed size of a full HRU array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>compressed_size</strong> – Compressed size of HRU array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geb.HRUs.HRUs.create_HRUs">
+<span class="sig-name descname"><span class="pre">create_HRUs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/HRUs.html#HRUs.create_HRUs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.HRUs.HRUs.create_HRUs" title="Link to this definition"></a></dt>
+<dd><p>Function to create HRUs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>land_use_array</strong> – Land use of each HRU.</p></li>
+<li><p><strong>land_use_ratio</strong> – Relative size of HRU to grid.</p></li>
+<li><p><strong>land_use_owner</strong> – Owner of HRU.</p></li>
+<li><p><strong>HRU_to_grid</strong> – Maps HRUs to index of compressed cell index.</p></li>
+<li><p><strong>grid_to_HRU</strong> – Array of size of the compressed grid cells. Each value maps to the index of the first unit of the next cell.</p></li>
+<li><p><strong>unmerged_HRU_indices</strong> – The index of the HRU to the subcell.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geb.HRUs.HRUs.create_HRUs_numba">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_HRUs_numba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">farms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">land_use_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/HRUs.html#HRUs.create_HRUs_numba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.HRUs.HRUs.create_HRUs_numba" title="Link to this definition"></a></dt>
+<dd><p>Numba helper function to create HRUs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>farms</strong> – Map of farms. Each unique integer is a unique farm. -1 is no farm.</p></li>
+<li><p><strong>land_use_classes</strong> – CWatM land use class map [0-5].</p></li>
+<li><p><strong>mask</strong> – Mask of the normal grid cells.</p></li>
+<li><p><strong>scaling</strong> – Scaling between mask and maximum resolution of HRUs.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>land_use_array</strong> – Land use of each HRU.</p></li>
+<li><p><strong>land_use_ratio</strong> – Relative size of HRU to grid.</p></li>
+<li><p><strong>land_use_owner</strong> – Owner of HRU.</p></li>
+<li><p><strong>HRU_to_grid</strong> – Maps HRUs to index of compressed cell index.</p></li>
+<li><p><strong>var_to_HRU</strong> – Array of size of the compressed grid cells. Each value maps to the index of the first unit of the next cell.</p></li>
+<li><p><strong># var_to_HRU_uncompressed</strong> – Array of size of the grid cells. Each value maps to the index of the first unit of the next cell.</p></li>
+<li><p><strong>unmerged_HRU_indices</strong> – The index of the HRU to the subcell.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geb.HRUs.HRUs.decompress">
+<span class="sig-name descname"><span class="pre">decompress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">HRU_array</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/HRUs.html#HRUs.decompress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.HRUs.HRUs.decompress" title="Link to this definition"></a></dt>
+<dd><p>Decompress HRU array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>HRU_array</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – HRU_array.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>outarray</strong> – Decompressed HRU_array.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geb.HRUs.HRUs.full_compressed">
+<span class="sig-name descname"><span class="pre">full_compressed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fill_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/HRUs.html#HRUs.full_compressed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.HRUs.HRUs.full_compressed" title="Link to this definition"></a></dt>
+<dd><p>Return a full array with size of number of HRUs. Takes any other argument normally used in np.full.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Variable length argument list.</p></li>
+<li><p><strong>**kwargs</strong> – Arbitrary keyword arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>array</strong> – Array with size of number of HRUs.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geb.HRUs.HRUs.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">HRU_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/HRUs.html#HRUs.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.HRUs.HRUs.plot" title="Link to this definition"></a></dt>
+<dd><p>Function to plot HRU data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>HRU_array</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – Data to plot. Size must be equal to number of HRUs.</p></li>
+<li><p><strong>ax</strong> – Optional matplotlib axis object. If given, data will be plotted on given axes.</p></li>
+<li><p><strong>show</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Boolean whether to show the plot or not.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geb.HRUs.HRUs.zeros">
+<span class="sig-name descname"><span class="pre">zeros</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/HRUs.html#HRUs.zeros"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.HRUs.HRUs.zeros" title="Link to this definition"></a></dt>
+<dd><p>Return an array (CuPy or Numpy) of zeros with given size. Takes any other argument normally used in np.zeros.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Variable length argument list.</p></li>
+<li><p><strong>**kwargs</strong> – Arbitrary keyword arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>array</strong> – Array with size of number of HRUs.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="geb.HRUs.Modflow">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Modflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/HRUs.html#Modflow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.HRUs.Modflow" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="geb.HRUs.to_HRU">
+<span class="sig-name descname"><span class="pre">to_HRU</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_to_HRU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">land_use_ratio</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/HRUs.html#to_HRU"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.HRUs.to_HRU" title="Link to this definition"></a></dt>
+<dd><p>Numba helper function to convert from grid to HRU.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – The grid data to be converted.</p></li>
+<li><p><strong>grid_to_HRU</strong> – Array of size of the compressed grid cells. Each value maps to the index of the first unit of the next cell.</p></li>
+<li><p><strong>land_use_ratio</strong> – Relative size of HRU to grid.</p></li>
+<li><p><strong>fn</strong> – Name of function to apply to data. None if data should be directly inserted into HRUs - generally used when units are irrespective of area. ‘mean’ if data should first be corrected relative to the land use ratios - generally used when units are relative to area.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ouput_data</strong> – Data converted to HRUs.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="geb.HRUs.to_grid">
+<span class="sig-name descname"><span class="pre">to_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_to_HRU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">land_use_ratio</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'weightedmean'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/HRUs.html#to_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.HRUs.to_grid" title="Link to this definition"></a></dt>
+<dd><p>Numba helper function to convert from HRU to grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – The grid data to be converted.</p></li>
+<li><p><strong>grid_to_HRU</strong> – Array of size of the compressed grid cells. Each value maps to the index of the first unit of the next cell.</p></li>
+<li><p><strong>land_use_ratio</strong> – Relative size of HRU to grid.</p></li>
+<li><p><strong>fn</strong> – Name of function to apply to data. In most cases, several HRUs are combined into one grid unit, so a function must be applied. Choose from <cite>mean</cite>, <cite>sum</cite>, <cite>nansum</cite>, <cite>max</cite> and <cite>min</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ouput_data</strong> – Data converted to HRUs.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="report.html" class="btn btn-neutral float-left" title="Report" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="artists.html" class="btn btn-neutral float-right" title="Artists" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; <a href="copyright.html">Copyright</a> 2023, VU-IVM and IIASA.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

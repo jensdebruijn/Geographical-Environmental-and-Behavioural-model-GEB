@@ -1,0 +1,204 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>geb.agents.government &mdash; GEB  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=5dd5ad26" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5be48651"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=27b9c81c"></script>
+      <script src="../../../_static/doctools.js?v=695de88e"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../../copyright.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            GEB
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../preprocessing.html">Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../running.html">Running the model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../calibration.html">Calibration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ODD/ODD.html">ODD protocol</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Agents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../agents/__init__.html">Agents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../agents/farmers.html">Farmers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../agents/government.html">Government</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../model.html">Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cwatm_model.html">CWatM Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../report.html">Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../HRUs.html">Farm-level HRUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../artists.html">Artists</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">About</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors_page.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../updates.html">Updates</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">GEB</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../agents.html">geb.agents</a></li>
+      <li class="breadcrumb-item active">geb.agents.government</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for geb.agents.government</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.general</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentBaseClass</span>
+
+
+<div class="viewcode-block" id="Government">
+<a class="viewcode-back" href="../../../agents/government.html#geb.agents.government.Government">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Government</span><span class="p">(</span><span class="n">AgentBaseClass</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This class is used to simulate the government.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model: The GEB model.</span>
+<span class="sd">        agents: The class that includes all agent types (allowing easier communication between agents).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">agents</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agents</span> <span class="o">=</span> <span class="n">agents</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;agent_settings&quot;</span><span class="p">][</span><span class="s2">&quot;government&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s2">&quot;government&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;agent_settings&quot;</span><span class="p">]</span>
+            <span class="k">else</span> <span class="p">{}</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ratio_farmers_to_provide_subsidies_per_year</span> <span class="o">=</span> <span class="mf">0.05</span>
+
+        <span class="n">AgentBaseClass</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">spinup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">create_bucket</span><span class="p">(</span><span class="s2">&quot;agents.government.var&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">provide_subsidies</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;subsidies&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">current_timestep</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">crop_farmers</span><span class="o">.</span><span class="n">borewell_cost_1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">crop_farmers</span><span class="o">.</span><span class="n">borewell_cost_1</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">region</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="mf">0.5</span> <span class="o">*</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">crop_farmers</span><span class="o">.</span><span class="n">borewell_cost_1</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">region</span><span class="p">]</span>
+                <span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">crop_farmers</span><span class="o">.</span><span class="n">borewell_cost_2</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">region</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="mf">0.5</span> <span class="o">*</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">crop_farmers</span><span class="o">.</span><span class="n">borewell_cost_2</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">region</span><span class="p">]</span>
+                <span class="p">]</span>
+
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">request_flood_cushions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reservoirIDs</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_irrigation_limit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;irrigation_limit&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">irrigation_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;irrigation_limit&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">irrigation_limit</span><span class="p">[</span><span class="s2">&quot;per&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;capita&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">crop_farmers</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">irrigation_limit_m3</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">crop_farmers</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">household_size</span> <span class="o">*</span> <span class="n">irrigation_limit</span><span class="p">[</span><span class="s2">&quot;limit&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">irrigation_limit</span><span class="p">[</span><span class="s2">&quot;per&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;area&quot;</span><span class="p">:</span>  <span class="c1"># limit per m2 of field</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">crop_farmers</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">irrigation_limit_m3</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">crop_farmers</span><span class="o">.</span><span class="n">field_size_per_farmer</span>
+                <span class="o">*</span> <span class="n">irrigation_limit</span><span class="p">[</span><span class="s2">&quot;limit&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                <span class="s2">&quot;Only &#39;capita&#39; is implemented for irrigation limit&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;min&quot;</span> <span class="ow">in</span> <span class="n">irrigation_limit</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">crop_farmers</span><span class="o">.</span><span class="n">irrigation_limit_m3</span><span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">crop_farmers</span><span class="o">.</span><span class="n">irrigation_limit_m3</span> <span class="o">&lt;</span> <span class="n">irrigation_limit</span><span class="p">[</span><span class="s2">&quot;min&quot;</span><span class="p">]</span>
+            <span class="p">]</span> <span class="o">=</span> <span class="n">irrigation_limit</span><span class="p">[</span><span class="s2">&quot;min&quot;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Government.step">
+<a class="viewcode-back" href="../../../agents/government.html#geb.agents.government.Government.step">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function is run each timestep.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_irrigation_limit</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">provide_subsidies</span><span class="p">()</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; <a href="../../../copyright.html">Copyright</a> 2023, VU-IVM and IIASA.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

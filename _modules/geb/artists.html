@@ -1,0 +1,509 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>geb.artists &mdash; GEB  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5dd5ad26" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5be48651"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=27b9c81c"></script>
+      <script src="../../_static/doctools.js?v=695de88e"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            GEB
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../preprocessing.html">Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../running.html">Running the model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../calibration.html">Calibration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ODD/ODD.html">ODD protocol</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Agents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../agents/__init__.html">Agents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../agents/farmers.html">Farmers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../agents/government.html">Government</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../model.html">Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cwatm_model.html">CWatM Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../report.html">Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../HRUs.html">Farm-level HRUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../artists.html">Artists</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">About</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../authors_page.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../updates.html">Updates</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GEB</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">geb.artists</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for geb.artists</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">honeybees.artists</span><span class="w"> </span><span class="kn">import</span> <span class="n">Artists</span> <span class="k">as</span> <span class="n">honeybeesArtists</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">attrgetter</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">geb.store</span><span class="w"> </span><span class="kn">import</span> <span class="n">DynamicArray</span>
+
+
+<div class="viewcode-block" id="Artists">
+<a class="viewcode-back" href="../../artists.html#geb.artists.Artists">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Artists</span><span class="p">(</span><span class="n">honeybeesArtists</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This class is used to configure how the display environment works.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model: The GEB model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">honeybeesArtists</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;#1386FF&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_colorbar_alpha</span> <span class="o">=</span> <span class="mf">0.4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">background_variable</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;data.HRU.var.land_use_type&quot;</span>  <span class="c1"># set initial background iamge.</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">custom_plot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_custom_plot</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_variables</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Artists.draw_crop_farmers">
+<a class="viewcode-back" href="../../artists.html#geb.artists.Artists.draw_crop_farmers">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">draw_crop_farmers</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">agents</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;#ff0000&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function is used to draw farmers. First it is determined what crop is grown by the farmer, then the we get the color used to display that crop from the model configuration.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            model: The GEB model.</span>
+<span class="sd">            agents: The farmer class to plot.</span>
+<span class="sd">            idx: The farmer index.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            portrayal: Portrayal of farmer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># if self.model.agents.farmers.flooded[idx] == True:</span>
+        <span class="c1">#     color = &#39;#ff0000&#39;</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     color = &#39;#0000ff&#39;</span>
+        <span class="c1"># if idx == self.model.agents.farmers.sample[0]:</span>
+        <span class="c1">#     color = &#39;#ff0000&#39;</span>
+        <span class="c1">#     r = 3</span>
+        <span class="c1"># elif idx == self.model.agents.farmers.sample[1]:</span>
+        <span class="c1">#     color = &#39;#00ff00&#39;</span>
+        <span class="c1">#     r = 3</span>
+        <span class="c1"># elif idx == self.model.agents.farmers.sample[2]:</span>
+        <span class="c1">#     color = &#39;#0000ff&#39;</span>
+        <span class="c1">#     r = 3</span>
+        <span class="c1"># else:</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="mf">0.5</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;shape&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="s2">&quot;circle&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;r&quot;</span><span class="p">:</span> <span class="n">r</span><span class="p">,</span>
+            <span class="s2">&quot;filled&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;#ff0000&quot;</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">draw_tehsil</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">properties</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;shape&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="s2">&quot;polygon&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;filled&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">properties</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;edge&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;linewidth&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="p">}</span>
+
+<div class="viewcode-block" id="Artists.get_custom_plot">
+<a class="viewcode-back" href="../../artists.html#geb.artists.Artists.get_custom_plot">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_custom_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Here you can specify custom options for plotting the background.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            custom_dict: Dictionary of dictionaries. The first level is the name of each of the variables, the second level the options for those variables.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                {</span>
+<span class="sd">                    &#39;HRU.crop_map&#39;: {</span>
+<span class="sd">                        &#39;type&#39;: &#39;discrete&#39;,</span>
+<span class="sd">                        &#39;nanvalue&#39;: -1,</span>
+<span class="sd">                        &#39;names&#39;: [&#39;crop name 1&#39;, &#39;crop name 2&#39;],</span>
+<span class="sd">                        &#39;colors&#39;: [&#39;#00FF00&#39;, &#39;#FF0000&#39;]</span>
+<span class="sd">                    }</span>
+<span class="sd">                }</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;data.HRU.land_use_type&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;categorical&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;nanvalue&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;names&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="s2">&quot;forest&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;grassland/non-irrigated&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;paddy-irrigated&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;non-paddy irrigated&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;sealed&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;water&quot;</span><span class="p">,</span>
+                <span class="p">],</span>
+                <span class="s2">&quot;colors&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="s2">&quot;#274e2e&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;#adffbc&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;#8555aa&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;#007d13&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;#7e8180&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;#2636d9&quot;</span><span class="p">,</span>
+                <span class="p">],</span>
+            <span class="p">},</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="Artists.set_variables">
+<a class="viewcode-back" href="../../artists.html#geb.artists.Artists.set_variables">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function is used to get a dictionary of variables that can be shown as background variable. The dictionary :code:`self.variables_dict` contains the name of each variable to display as key, and the actual variable as value.</span>
+
+<span class="sd">        Checks are performed to see whether the data is the right size. Only compressed data can be shown. If a dataset has multiple dimensions, the dimensions can be shown seperately as `variable[0], variable[1], ...`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variables_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">add_vars</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">compressed_size</span><span class="p">,</span> <span class="n">dtypes</span><span class="p">,</span> <span class="n">variant_dim</span><span class="p">,</span> <span class="n">invariant_dim</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">intersect1d</span><span class="p">(</span><span class="n">variant_dim</span><span class="p">,</span> <span class="n">invariant_dim</span><span class="p">)</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span>
+            <span class="n">container</span> <span class="o">=</span> <span class="n">attrgetter</span><span class="p">(</span><span class="n">name</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">varname</span><span class="p">,</span> <span class="n">variable</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="n">container</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">variable</span><span class="p">,</span> <span class="n">dtypes</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">variable</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">variable</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="n">compressed_size</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">variables_dict</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">varname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">variable</span>
+                    <span class="k">if</span> <span class="p">(</span>
+                        <span class="n">variable</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span>
+                        <span class="ow">and</span> <span class="n">variable</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">invariant_dim</span><span class="p">]</span> <span class="o">==</span> <span class="n">compressed_size</span>
+                    <span class="p">):</span>
+                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">variable</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">variant_dim</span><span class="p">]):</span>
+                            <span class="k">if</span> <span class="n">variant_dim</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">variables_dict</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">varname</span><span class="si">}</span><span class="s2">[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                                    <span class="n">variable</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                                <span class="p">)</span>
+                            <span class="k">elif</span> <span class="n">variant_dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">variables_dict</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">varname</span><span class="si">}</span><span class="s2">[:, </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                                    <span class="n">variable</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
+                                <span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="k">raise</span> <span class="ne">ValueError</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">continue</span>
+
+        <span class="n">add_vars</span><span class="p">(</span>
+            <span class="s2">&quot;data.grid.var&quot;</span><span class="p">,</span>
+            <span class="n">compressed_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compressed_size</span><span class="p">,</span>
+            <span class="n">dtypes</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+            <span class="n">variant_dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">invariant_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">add_vars</span><span class="p">(</span>
+            <span class="s2">&quot;data.HRU.var&quot;</span><span class="p">,</span>
+            <span class="n">compressed_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">HRU</span><span class="o">.</span><span class="n">compressed_size</span><span class="p">,</span>
+            <span class="n">dtypes</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+            <span class="n">variant_dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">invariant_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">add_vars</span><span class="p">(</span>
+            <span class="s2">&quot;agents.crop_farmers.var&quot;</span><span class="p">,</span>
+            <span class="n">compressed_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">crop_farmers</span><span class="o">.</span><span class="n">n</span><span class="p">,</span>
+            <span class="n">dtypes</span><span class="o">=</span><span class="n">DynamicArray</span><span class="p">,</span>
+            <span class="n">variant_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">invariant_dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Artists.get_background_variables">
+<a class="viewcode-back" href="../../artists.html#geb.artists.Artists.get_background_variables">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_background_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function gets a list of variables that can be used to show in the background.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            options: List of names for options to show in background.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_variables</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variables_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="Artists.set_background_variable">
+<a class="viewcode-back" href="../../artists.html#geb.artists.Artists.set_background_variable">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_background_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function is used to update the name of the variable to use for drawing the background of the map.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">background_variable</span> <span class="o">=</span> <span class="n">option_name</span></div>
+
+
+<div class="viewcode-block" id="Artists.get_background">
+<a class="viewcode-back" href="../../artists.html#geb.artists.Artists.get_background">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_background</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">minvalue</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">maxvalue</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;#1386FF&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function is called from the canvas class to draw the canvas background. The name of the variable to draw is stored in `self.background_variable`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            minvalue: The minimum value for the display scale.</span>
+<span class="sd">            maxvalue: The maximum value for the display scale.</span>
+<span class="sd">            color: The color to use to display the variable.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            background: RGBA-array to display as background.</span>
+<span class="sd">            legend: Dictionary with data and formatting rules for background legend.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">background_variable</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;agents.crop_farmers&quot;</span><span class="p">):</span>
+            <span class="n">slicer</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\[([^\]]+)\]$&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">background_variable</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">slicer</span><span class="p">:</span>
+                <span class="n">array</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="s2">&quot;self.model.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">background_variable</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">array</span> <span class="o">=</span> <span class="n">attrgetter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">background_variable</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+
+            <span class="n">mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">HRU</span><span class="o">.</span><span class="n">mask</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">compressed_array</span><span class="p">,</span> <span class="n">array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">reporter</span><span class="o">.</span><span class="n">hydrology_reporter</span><span class="o">.</span><span class="n">get_array</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">background_variable</span><span class="p">,</span> <span class="n">decompress</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">attrgetter</span><span class="p">(</span>
+                <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">background_variable</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.var&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="n">mask</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">background_variable</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_plot</span><span class="p">:</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_plot</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">background_variable</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="s2">&quot;type&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">):</span>
+                <span class="n">options</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;continuous&quot;</span>
+                <span class="n">options</span><span class="p">[</span><span class="s2">&quot;nanvalue&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">array</span><span class="p">)</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;</span> <span class="mi">30</span><span class="p">:</span>
+                    <span class="n">options</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;categorical&quot;</span>
+                    <span class="n">options</span><span class="p">[</span><span class="s2">&quot;nanvalue&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span>
+                        <span class="s2">&quot;Type for array might be categorical, but more than 30 categories were found, so rendering as continous.&quot;</span>
+                    <span class="p">)</span>
+                    <span class="n">options</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;continuous&quot;</span>
+                    <span class="n">array</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+                <span class="n">options</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;bool&quot;</span>
+                <span class="n">options</span><span class="p">[</span><span class="s2">&quot;nanvalue&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">background_variable</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;agents.crop_farmers&quot;</span><span class="p">):</span>
+            <span class="n">compressed_array</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">compressed_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">HRU</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">land_owners</span><span class="p">)</span>
+            <span class="n">array</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">HRU</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">land_owners</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;nanvalue&quot;</span><span class="p">]</span>
+            <span class="n">array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">HRU</span><span class="o">.</span><span class="n">decompress</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;bool&quot;</span><span class="p">:</span>
+            <span class="n">minvalue</span><span class="p">,</span> <span class="n">maxvalue</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">maxvalue</span><span class="p">:</span>
+                <span class="n">maxvalue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">array</span><span class="p">[</span><span class="o">~</span><span class="n">mask</span><span class="p">])</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">minvalue</span><span class="p">:</span>
+                <span class="n">minvalue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">(</span><span class="n">array</span><span class="p">[</span><span class="o">~</span><span class="n">mask</span><span class="p">])</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">maxvalue</span><span class="p">):</span>  <span class="c1"># minvalue must be nan as well</span>
+                <span class="n">minvalue</span><span class="p">,</span> <span class="n">maxvalue</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+
+        <span class="n">background</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="o">*</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;continuous&quot;</span><span class="p">:</span>
+            <span class="n">array</span> <span class="o">-=</span> <span class="n">minvalue</span>
+            <span class="k">if</span> <span class="n">maxvalue</span> <span class="o">-</span> <span class="n">minvalue</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">array</span> <span class="o">*=</span> <span class="mi">255</span> <span class="o">/</span> <span class="p">(</span><span class="n">maxvalue</span> <span class="o">-</span> <span class="n">minvalue</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">array</span> <span class="o">*=</span> <span class="mi">0</span>
+            <span class="n">array</span><span class="p">[</span><span class="n">array</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">array</span><span class="p">[</span><span class="n">array</span> <span class="o">&gt;</span> <span class="mi">255</span><span class="p">]</span> <span class="o">=</span> <span class="mi">255</span>
+            <span class="n">rgb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hex_to_rgb</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+                <span class="n">background</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">channel</span><span class="p">][</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">array</span><span class="p">)]</span> <span class="o">=</span> <span class="n">rgb</span><span class="p">[</span><span class="n">channel</span><span class="p">]</span> <span class="o">*</span> <span class="mi">255</span>
+            <span class="n">background</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">array</span>
+            <span class="n">background</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">array</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">200</span>
+            <span class="n">background</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">array</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">200</span>
+            <span class="n">background</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">2</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">array</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">200</span>
+            <span class="n">background</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">3</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">array</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">255</span>
+            <span class="n">legend</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;colorbar&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">color</span><span class="p">,</span>
+                <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">round_to_n_significant_digits</span><span class="p">(</span><span class="n">minvalue</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+                <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">round_to_n_significant_digits</span><span class="p">(</span><span class="n">maxvalue</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+                <span class="s2">&quot;min_colorbar_alpha&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;nanvalue&quot;</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
+                <span class="n">nanvalue</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;nanvalue&quot;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">nanvalue</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;categorical&quot;</span><span class="p">:</span>
+                <span class="n">unique_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">compressed_array</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">nanvalue</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">unique_values</span> <span class="o">=</span> <span class="n">unique_values</span><span class="p">[</span><span class="n">unique_values</span> <span class="o">!=</span> <span class="n">nanvalue</span><span class="p">]</span>
+                <span class="n">unique_values</span> <span class="o">=</span> <span class="n">unique_values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">unique_values</span><span class="p">:</span>  <span class="c1"># no data to be shown on map</span>
+                    <span class="k">if</span> <span class="s2">&quot;colors&quot;</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
+                        <span class="n">colors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;colors&quot;</span><span class="p">])[</span>
+                            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">unique_values</span><span class="p">)</span>
+                        <span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                        <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">hex_to_rgb</span><span class="p">(</span><span class="n">color</span><span class="p">)</span> <span class="k">for</span> <span class="n">color</span> <span class="ow">in</span> <span class="n">colors</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">colors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_distinct_colors</span><span class="p">(</span>
+                            <span class="nb">len</span><span class="p">(</span><span class="n">unique_values</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;rgb&quot;</span>
+                        <span class="p">)</span>
+                    <span class="k">if</span> <span class="s2">&quot;names&quot;</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
+                        <span class="n">names</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;names&quot;</span><span class="p">])[</span>
+                            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">unique_values</span><span class="p">)</span>
+                        <span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">names</span> <span class="o">=</span> <span class="n">unique_values</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">colors</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">channels</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="n">background</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">3</span><span class="p">][</span><span class="n">array</span> <span class="o">!=</span> <span class="n">nanvalue</span><span class="p">]</span> <span class="o">=</span> <span class="mi">255</span>
+            <span class="k">elif</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;discrete&quot;</span><span class="p">:</span>
+                <span class="n">unique_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
+                    <span class="n">compressed_array</span><span class="p">[</span><span class="n">compressed_array</span> <span class="o">!=</span> <span class="n">nanvalue</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span>
+                    <span class="n">compressed_array</span><span class="p">[</span><span class="n">compressed_array</span> <span class="o">!=</span> <span class="n">nanvalue</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="mi">1</span><span class="p">,</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                <span class="k">if</span> <span class="s2">&quot;names&quot;</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
+                    <span class="n">names</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;names&quot;</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">names</span> <span class="o">=</span> <span class="n">unique_values</span>
+                <span class="n">colors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_discrete_colors</span><span class="p">(</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="n">unique_values</span><span class="p">),</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">hex_to_rgb</span><span class="p">(</span><span class="n">color</span><span class="p">),</span>
+                    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;rgb&quot;</span><span class="p">,</span>
+                    <span class="n">min_alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">channels</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;bool&quot;</span><span class="p">:</span>
+                <span class="n">unique_values</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">]</span>
+                <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;False&quot;</span><span class="p">,</span> <span class="s2">&quot;True&quot;</span><span class="p">]</span>
+                <span class="n">channels</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+                <span class="n">colors</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span>
+
+            <span class="k">if</span> <span class="n">unique_values</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">unique_values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># check if array is sorted</span>
+                <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="n">channels</span><span class="p">:</span>
+                    <span class="n">channel_colors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">color</span><span class="p">[</span><span class="n">channel</span><span class="p">]</span> <span class="o">*</span> <span class="mi">255</span> <span class="k">for</span> <span class="n">color</span> <span class="ow">in</span> <span class="n">colors</span><span class="p">]</span>
+                    <span class="p">)</span>
+                    <span class="n">color_array_size</span> <span class="o">=</span> <span class="n">unique_values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="k">if</span> <span class="n">unique_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">color_array_size</span> <span class="o">+=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">unique_values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="n">color_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">color_array_size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+                    <span class="n">color_array</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">unique_values</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">channel_colors</span>
+                    <span class="p">)</span>
+                    <span class="n">background</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">channel</span><span class="p">]</span> <span class="o">=</span> <span class="n">color_array</span><span class="p">[</span><span class="n">array</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)]</span>
+
+            <span class="n">legend</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;legend&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;labels&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">name</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">rgb_to_hex</span><span class="p">(</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+                <span class="p">},</span>
+            <span class="p">}</span>
+
+        <span class="n">background</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="mi">200</span>
+
+        <span class="k">return</span> <span class="n">background</span><span class="p">,</span> <span class="n">legend</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; <a href="../../copyright.html">Copyright</a> 2023, VU-IVM and IIASA.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

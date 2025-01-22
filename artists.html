@@ -1,0 +1,264 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Artists &mdash; GEB  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5dd5ad26" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5be48651"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=27b9c81c"></script>
+      <script src="_static/doctools.js?v=695de88e"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="next" title="Authors" href="authors_page.html" />
+    <link rel="prev" title="Hydrological response units" href="HRUs.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            GEB
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">Running the model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="calibration.html">Calibration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ODD/ODD.html">ODD protocol</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Agents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="agents/__init__.html">Agents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="agents/farmers.html">Farmers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="agents/government.html">Government</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="model.html">Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cwatm_model.html">CWatM Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="report.html">Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="HRUs.html">Farm-level HRUs</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Artists</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#geb.artists.Artists"><code class="docutils literal notranslate"><span class="pre">Artists</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#geb.artists.Artists.draw_crop_farmers"><code class="docutils literal notranslate"><span class="pre">Artists.draw_crop_farmers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geb.artists.Artists.get_background"><code class="docutils literal notranslate"><span class="pre">Artists.get_background()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geb.artists.Artists.get_background_variables"><code class="docutils literal notranslate"><span class="pre">Artists.get_background_variables()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geb.artists.Artists.get_custom_plot"><code class="docutils literal notranslate"><span class="pre">Artists.get_custom_plot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geb.artists.Artists.set_background_variable"><code class="docutils literal notranslate"><span class="pre">Artists.set_background_variable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geb.artists.Artists.set_variables"><code class="docutils literal notranslate"><span class="pre">Artists.set_variables()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">About</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="authors_page.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updates.html">Updates</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">GEB</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Artists</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/artists.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-geb.artists">
+<span id="artists"></span><h1>Artists<a class="headerlink" href="#module-geb.artists" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="geb.artists.Artists">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Artists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/artists.html#Artists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.artists.Artists" title="Link to this definition"></a></dt>
+<dd><p>This class is used to configure how the display environment works.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> – The GEB model.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="geb.artists.Artists.draw_crop_farmers">
+<span class="sig-name descname"><span class="pre">draw_crop_farmers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#ff0000'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/artists.html#Artists.draw_crop_farmers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.artists.Artists.draw_crop_farmers" title="Link to this definition"></a></dt>
+<dd><p>This function is used to draw farmers. First it is determined what crop is grown by the farmer, then the we get the color used to display that crop from the model configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> – The GEB model.</p></li>
+<li><p><strong>agents</strong> – The farmer class to plot.</p></li>
+<li><p><strong>idx</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – The farmer index.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>portrayal</strong> – Portrayal of farmer.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geb.artists.Artists.get_background">
+<span class="sig-name descname"><span class="pre">get_background</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">minvalue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxvalue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#1386FF'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/artists.html#Artists.get_background"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.artists.Artists.get_background" title="Link to this definition"></a></dt>
+<dd><p>This function is called from the canvas class to draw the canvas background. The name of the variable to draw is stored in <cite>self.background_variable</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>minvalue</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]</span>) – The minimum value for the display scale.</p></li>
+<li><p><strong>maxvalue</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]</span>) – The maximum value for the display scale.</p></li>
+<li><p><strong>color</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The color to use to display the variable.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>background</strong> – RGBA-array to display as background.</p></li>
+<li><p><strong>legend</strong> – Dictionary with data and formatting rules for background legend.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geb.artists.Artists.get_background_variables">
+<span class="sig-name descname"><span class="pre">get_background_variables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/artists.html#Artists.get_background_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.artists.Artists.get_background_variables" title="Link to this definition"></a></dt>
+<dd><p>This function gets a list of variables that can be used to show in the background.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>options</strong> – List of names for options to show in background.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geb.artists.Artists.get_custom_plot">
+<span class="sig-name descname"><span class="pre">get_custom_plot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/artists.html#Artists.get_custom_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.artists.Artists.get_custom_plot" title="Link to this definition"></a></dt>
+<dd><p>Here you can specify custom options for plotting the background.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>custom_dict</strong> – Dictionary of dictionaries. The first level is the name of each of the variables, the second level the options for those variables.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</span></p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s1">&#39;HRU.crop_map&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;discrete&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;nanvalue&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="s1">&#39;names&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;crop name 1&#39;</span><span class="p">,</span> <span class="s1">&#39;crop name 2&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;colors&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;#00FF00&#39;</span><span class="p">,</span> <span class="s1">&#39;#FF0000&#39;</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geb.artists.Artists.set_background_variable">
+<span class="sig-name descname"><span class="pre">set_background_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/artists.html#Artists.set_background_variable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.artists.Artists.set_background_variable" title="Link to this definition"></a></dt>
+<dd><p>This function is used to update the name of the variable to use for drawing the background of the map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geb.artists.Artists.set_variables">
+<span class="sig-name descname"><span class="pre">set_variables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/geb/artists.html#Artists.set_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geb.artists.Artists.set_variables" title="Link to this definition"></a></dt>
+<dd><p>This function is used to get a dictionary of variables that can be shown as background variable. The dictionary <code class="code docutils literal notranslate"><span class="pre">self.variables_dict</span></code> contains the name of each variable to display as key, and the actual variable as value.</p>
+<p>Checks are performed to see whether the data is the right size. Only compressed data can be shown. If a dataset has multiple dimensions, the dimensions can be shown seperately as <cite>variable[0], variable[1], …</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="HRUs.html" class="btn btn-neutral float-left" title="Hydrological response units" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="authors_page.html" class="btn btn-neutral float-right" title="Authors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; <a href="copyright.html">Copyright</a> 2023, VU-IVM and IIASA.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

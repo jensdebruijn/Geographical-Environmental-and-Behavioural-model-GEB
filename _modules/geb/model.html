@@ -1,0 +1,438 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>geb.model &mdash; GEB  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5dd5ad26" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5be48651"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=27b9c81c"></script>
+      <script src="../../_static/doctools.js?v=695de88e"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            GEB
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../preprocessing.html">Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../running.html">Running the model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../calibration.html">Calibration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ODD/ODD.html">ODD protocol</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Agents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../agents/__init__.html">Agents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../agents/farmers.html">Farmers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../agents/government.html">Government</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../model.html">Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cwatm_model.html">CWatM Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../report.html">Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../HRUs.html">Farm-level HRUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../artists.html">Artists</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">About</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../authors_page.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../updates.html">Updates</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GEB</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">geb.model</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for geb.model</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">honeybees.library.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">timeprint</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">honeybees.area</span><span class="w"> </span><span class="kn">import</span> <span class="n">Area</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">honeybees.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">ABM_Model</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">geb.store</span><span class="w"> </span><span class="kn">import</span> <span class="n">Store</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">geb.reporter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Reporter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">geb.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agents</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">geb.artists</span><span class="w"> </span><span class="kn">import</span> <span class="n">Artists</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">geb.HRUs</span><span class="w"> </span><span class="kn">import</span> <span class="n">Data</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.hydrology</span><span class="w"> </span><span class="kn">import</span> <span class="n">Hydrology</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">geb.hazards.driver</span><span class="w"> </span><span class="kn">import</span> <span class="n">HazardDriver</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ABM</span><span class="p">(</span><span class="n">ABM_Model</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">current_time</span><span class="p">,</span>
+        <span class="n">timestep_length</span><span class="p">,</span>
+        <span class="n">n_timesteps</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the agent-based model.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            config_path: Filepath of the YAML-configuration file.</span>
+<span class="sd">            args: Run arguments.</span>
+<span class="sd">            coordinate_system: Coordinate system that should be used. Currently only accepts WGS84.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">ABM_Model</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">current_time</span><span class="p">,</span>
+            <span class="n">timestep_length</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">n_timesteps</span><span class="o">=</span><span class="n">n_timesteps</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">study_area</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;xmin&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;xmax&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">bounds</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+            <span class="s2">&quot;ymin&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="s2">&quot;ymax&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">bounds</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="o">=</span> <span class="n">Area</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">study_area</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agents</span> <span class="o">=</span> <span class="n">Agents</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1"># This variable is required for the batch runner. To stop the model</span>
+        <span class="c1"># if some condition is met set running to False.</span>
+        <span class="n">timeprint</span><span class="p">(</span><span class="s2">&quot;Finished setup&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="GEBModel">
+<a class="viewcode-back" href="../../model.html#geb.model.GEBModel">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GEBModel</span><span class="p">(</span><span class="n">HazardDriver</span><span class="p">,</span> <span class="n">ABM</span><span class="p">,</span> <span class="n">Hydrology</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;GEB parent class.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config: Filepath of the YAML-configuration file (e.g. model.yml).</span>
+<span class="sd">        name: Name of model.</span>
+<span class="sd">        xmin: Minimum x coordinate.</span>
+<span class="sd">        xmax: Maximum x coordinate.</span>
+<span class="sd">        ymin: Minimum y coordinate.</span>
+<span class="sd">        ymax: Maximum y coordinate.</span>
+<span class="sd">        args: Run arguments.</span>
+<span class="sd">        coordinate_system: Coordinate system that should be used. Currently only accepts WGS84.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;GEB stands for Geographic Environmental and Behavioural model and is named after Geb, the personification of Earth in Egyptian mythology.</span><span class="se">\n</span><span class="s2">GEB aims to simulate both environment, for now the hydrological system, the behaviour of people and their interactions at large scale without sacrificing too much detail. The model does so by coupling an agent-based model which simulates millions individual people or households and a hydrological model. While the model can be expanded to other agents and environmental interactions, we focus on farmers, high-level agents, irrigation behaviour and land management for now.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="n">files</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="n">spinup</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">crs</span><span class="o">=</span><span class="mi">4326</span><span class="p">,</span>
+        <span class="n">timing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">crs</span> <span class="o">=</span> <span class="n">crs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timing</span> <span class="o">=</span> <span class="n">timing</span>
+        <span class="k">assert</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">spinup</span> <span class="o">=</span> <span class="n">spinup</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">setup_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot;simulate_hydrology&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">][</span><span class="s2">&quot;simulate_hydrology&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;Please add &#39;simulate_hydrology&#39; to the general section of the config file. For most cases this should be set to &#39;true&#39;.&quot;</span><span class="p">,</span>
+                <span class="ne">DeprecationWarning</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spinup</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;report&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># make a deep copy to avoid issues when the model is initialized multiple times</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">files</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">][</span><span class="s2">&quot;input_folder&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="n">value</span>
+
+        <span class="k">if</span> <span class="n">spinup</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run_name</span> <span class="o">=</span> <span class="s2">&quot;spinup&quot;</span>
+        <span class="k">elif</span> <span class="s2">&quot;name&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No &quot;name&quot; specified in config file under general. Using &quot;default&quot;.&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run_name</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">store</span> <span class="o">=</span> <span class="n">Store</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">report_folder</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">][</span><span class="s2">&quot;report_folder&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_name</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">report_folder</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">spinup_start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">][</span><span class="s2">&quot;spinup_time&quot;</span><span class="p">],</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spinup</span><span class="p">:</span>
+            <span class="n">end_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">][</span><span class="s2">&quot;start_time&quot;</span><span class="p">],</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">current_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">][</span><span class="s2">&quot;spinup_time&quot;</span><span class="p">],</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">end_time</span><span class="o">.</span><span class="n">year</span> <span class="o">-</span> <span class="n">current_time</span><span class="o">.</span><span class="n">year</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;Spinup time is less than 10 years. This is not recommended and may lead to issues later.&quot;</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">current_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">][</span><span class="s2">&quot;start_time&quot;</span><span class="p">],</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">end_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">][</span><span class="s2">&quot;end_time&quot;</span><span class="p">],</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">end_time</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">current_time</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">)</span>
+
+        <span class="n">timestep_length</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seconds_per_timestep</span> <span class="o">=</span> <span class="n">timestep_length</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+        <span class="n">n_timesteps</span> <span class="o">=</span> <span class="p">(</span><span class="n">end_time</span> <span class="o">-</span> <span class="n">current_time</span><span class="p">)</span> <span class="o">/</span> <span class="n">timestep_length</span>
+        <span class="k">assert</span> <span class="n">n_timesteps</span><span class="o">.</span><span class="n">is_integer</span><span class="p">()</span>
+        <span class="n">n_timesteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_timesteps</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">n_timesteps</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;End time is before or identical to start time&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">regions</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s2">&quot;geoms&quot;</span><span class="p">][</span><span class="s2">&quot;areamaps/regions&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">Data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;w&quot;</span><span class="p">:</span>
+            <span class="n">HazardDriver</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+            <span class="n">ABM</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="n">current_time</span><span class="p">,</span>
+                <span class="n">timestep_length</span><span class="p">,</span>
+                <span class="n">n_timesteps</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">][</span><span class="s2">&quot;simulate_hydrology&quot;</span><span class="p">]:</span>
+                <span class="n">Hydrology</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="p">,</span>
+                <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">spinup</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reporter</span> <span class="o">=</span> <span class="n">Reporter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">artists</span> <span class="o">=</span> <span class="n">Artists</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">restore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">store_location</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">store_location</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groundwater</span><span class="o">.</span><span class="n">modflow</span><span class="o">.</span><span class="n">restore</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">heads</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_timestep</span> <span class="o">=</span> <span class="n">timestep</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">multiverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># copy current state of timestep and time</span>
+        <span class="n">store_timestep</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_timestep</span><span class="p">)</span>
+
+        <span class="c1"># set a folder to store the initial state of the multiverse</span>
+        <span class="n">store_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_root</span> <span class="o">/</span> <span class="s2">&quot;multiverse&quot;</span> <span class="o">/</span> <span class="s2">&quot;forecast&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">store_location</span><span class="p">)</span>
+
+        <span class="c1"># perform one run of the multiverse</span>
+        <span class="n">discharges_before_restore</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+            <span class="n">discharges_before_restore</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">discharge</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+        <span class="c1"># restore the initial state of the multiverse</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">restore</span><span class="p">(</span><span class="n">store_location</span><span class="o">=</span><span class="n">store_location</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="n">store_timestep</span><span class="p">)</span>
+
+        <span class="c1"># again perform one run of the multiverse</span>
+        <span class="n">discharges_after_restore</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+            <span class="n">discharges_after_restore</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">discharge</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+        <span class="c1"># restore the initial state of the multiverse</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">restore</span><span class="p">(</span><span class="n">store_location</span><span class="o">=</span><span class="n">store_location</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="n">store_timestep</span><span class="p">)</span>
+
+        <span class="c1"># check if the discharges are the same in both multiverses</span>
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">discharges_before_restore</span><span class="p">,</span> <span class="n">discharges_after_restore</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GEBModel.step">
+<a class="viewcode-back" href="../../model.html#geb.model.GEBModel.step">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step_size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Forward the model by the given the number of steps.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            step_size: Number of steps the model should take. Can be integer or string `day`, `week`, `month`, `year`, `decade` or `century`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">step_size</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_step_str</span><span class="p">(</span><span class="n">step_size</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">step_size</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+            <span class="n">HazardDriver</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">ABM_Model</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">][</span><span class="s2">&quot;simulate_hydrology&quot;</span><span class="p">]:</span>
+                <span class="n">Hydrology</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">reporter</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+            <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">current_time</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">t1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">s)&quot;</span><span class="p">,</span>
+                <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span></div>
+
+
+            <span class="c1"># if self.current_timestep == 5:</span>
+            <span class="c1">#     self.multiverse()</span>
+
+<div class="viewcode-block" id="GEBModel.run">
+<a class="viewcode-back" href="../../model.html#geb.model.GEBModel.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run the model for the entire period, and export water table in case of spinup scenario.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_timesteps</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spinup</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Model run finished&quot;</span><span class="p">)</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">current_day_of_year</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the current day of the year.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            day: current day of the year.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_time</span><span class="o">.</span><span class="n">timetuple</span><span class="p">()</span><span class="o">.</span><span class="n">tm_yday</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">simulation_root</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the simulation root.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            simulation_root: Path of the simulation root.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;simulation_root&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_name</span>
+        <span class="n">folder</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">folder</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">simulation_root_spinup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the simulation root of the spinup.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            simulation_root: Path of the simulation root.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;simulation_root&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;spinup&quot;</span>
+        <span class="n">folder</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">folder</span>
+
+<div class="viewcode-block" id="GEBModel.close">
+<a class="viewcode-back" href="../../model.html#geb.model.GEBModel.close">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Finalizes the model.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;w&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">][</span><span class="s2">&quot;simulate_hydrology&quot;</span><span class="p">]:</span>
+            <span class="n">Hydrology</span><span class="o">.</span><span class="n">finalize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+            <span class="kn">from</span><span class="w"> </span><span class="nn">geb.workflows</span><span class="w"> </span><span class="kn">import</span> <span class="n">all_async_readers</span>
+
+            <span class="k">for</span> <span class="n">reader</span> <span class="ow">in</span> <span class="n">all_async_readers</span><span class="p">:</span>
+                <span class="n">reader</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; <a href="../../copyright.html">Copyright</a> 2023, VU-IVM and IIASA.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
